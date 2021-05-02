@@ -1,0 +1,5 @@
+-- list active processes
+netstat -a -o -n 
+
+-- kill process with PID #### from netstat mcd
+taskkill /PID #### /F

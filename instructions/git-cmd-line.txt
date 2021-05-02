@@ -1,0 +1,46 @@
+-- from apps directory
+git clone https://github.com/cldunn/demo-2.git
+
+-- get local status
+git status
+
+-- list branches
+git branch
+
+-- create branch "dev-branch"
+git branch dev-branch
+
+-- delete branch 
+git branch -d dev-branch
+
+-- switch to "dev-branch"
+git checkout dev-branch
+
+-- save pending local changes
+git stash
+
+-- restore stashed changes to local branch
+git stash pop
+
+-- commit pending local changes to local repository
+git commit -am "Message describing changes"
+
+-- add new file/directory to local pending changes
+git add <filename> 
+
+-- synch local branch with remote branch
+git pull
+
+-- refresh local repository from github
+git fetch -p origin
+git merge origin/master
+
+-- merge current branch with local master
+git merge master
+
+-- synch changes in local repository for local branch with remote repository branch 1st time
+git push --set-upstream origin dev-branch 
+
+-- synch changes in local repository with remote repository
+git push
+

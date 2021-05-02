@@ -1,0 +1,91 @@
+Editing
+    ctrl-N  =>  Open file by name
+
+    ctrl-<click>  =>  navigate to class/method that cursor is on
+
+    // placed at current cursor position
+    Alt-Insert
+    Code > Generate
+        Constructor
+        Getter and Setter
+        Equals and HashCode
+        toString
+
+    <rt-click> on "Class" > Refactor
+        Rename File ...
+        Move Class ...
+
+    code completion
+        type half word, choices appear in ddlb, 
+        complete word + "."  =>  then properties and method options appear in ddlb
+
+    ctrl-alt-T  =>  wraps selected code 
+        if, if else, while, do while, for, try catch, try finally, try catch finally, synchronized, runnable
+        
+    Ctrl-J  =>  abrevs for std code block declarations
+        select one,  hit tab key
+            psvm  - main application body
+            fori  - for loop
+            
+            
+=========================================================================================================
+
+Debugger
+    * debug window opens upon hitting first break point
+    * console window is tab in debugger toolbar
+
+    run in debug mode  => click debug button next to run button in editor toolbar
+        alternatively rerun debug session by clicking debug button in debugger window side bar
+
+    breakpoint
+        set break point  => click in gutter
+        view break points  =>  got to favorites tab window
+        edit break point  => rt-click on break point in gutter
+            enable/disable
+            define conditional (eg. x > 3)
+        
+        * see stack tract in right side pane in debugger window
+        
+    code stepping
+        steping options in debug window toolbar
+            step over  =>  F8
+            step into  =>  F7
+            step out   =>  Shift-F8
+            run to cursor  =>  Alt-F9
+    
+    debug information
+        variable values appear in debug window right pane and in code itself
+        viewing terms in expression  =>  add variable/method value to watches
+            select method/variable, rt-click selected code, select "Add to watches"
+        remove variable/expression from watch window
+            select variable/method, rt-click, select remove watch
+            
+    debug window
+        side bar buttons
+            stop debug session  =>  Ctrl-F2
+            view/edit break points   =>  Ctrl-Shift-F8
+                opens break point popup window
+            mute break points   =>  
+=====================================================================================
+
+Maven
+    Create New Maven Project
+        File > New Project 
+            select Maven, select "create from archetype", select archetype
+            don't select archetype, just seleect finish
+            
+            enter name (artifactId), expand / enter artifacts coordinates (groupId/artifactId/version)
+            
+    Switch projects
+        File > Close Project
+            From Popup window, select open/import project
+            Navigate to desired project in file system (directory will contain .idea directory and *.iml file in root)
+            
+    Import/Refresh maven dependencies
+        rt-click pom.xml
+            Maven > Reload project
+            
+    View > Tool WIndows > Maven Projects
+        expand lifecylce 
+            double click desired lifecycle to execute
+        

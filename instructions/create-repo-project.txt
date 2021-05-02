@@ -1,0 +1,26 @@
+workspace
+    repo
+        mvc-repo
+            mvc-parent
+                mvc-core
+                mvc-web
+        lib-repo
+             lib-parent
+                 lib-dao
+                 
+1. create workspace
+2. create subdirectory for repositories = "repo"
+
+-- repeat for all repositories ...
+3. create repository in github // eg. "mvc-repo"
+4. go to "repo" directory and create repo (mvc-repo) by executing: git clone https://github.com/cldunn/mvc-repo.git
+
+-- create one parent project for repo
+5. create maven project "mvc-parent" by executing parent-archetype command: create-parent-archetype <groupId> <artifactId>
+
+-- add subprojects ...
+7. create sub-modules for parent project
+    a. using web-archetype and create mvc-web under mvc-parent 
+    b. using spring initializer and create maven project (jar) and generate mvc-core.zip
+8. add to mvc-parent add sub-project to modules
+        <module>mvc-core<module>

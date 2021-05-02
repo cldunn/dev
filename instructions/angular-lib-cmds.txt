@@ -1,0 +1,62 @@
+-- create lib in dist (cmd in package.json)   
+dev/workspace-my-libs/apps/my-lib>npm run build:my-lib
+ 
+ -- create demo app (cmd in package.json)   
+ dev/workspace-my-libs/apps/my-lib>npm run build:my-demo
+
+-- create tgz from dist
+dev/workspace-my-libs/apps/my-lib/dist/my-lib>npm pack
+
+-- add angular project to symlinks
+dev/workspace-my-libs/apps/my-lib/dist/my-lib>npm link
+
+-- install linked dist into target app
+dev/workspace-app/apps/my-app/src/main/resources/static>npm link my-lib
+
+-- select repository, need login/pwd
+npm login --registry=<nexus url>
+
+npm publish my-lib.tgz
+
+-- clone from a branch
+git clone --single-branch --branch <branch name> <remote-repo>
+
+--update nodejs
+nvm install v12.8.0
+
+-- clean node modules
+remove package-lock.json
+npm cache clean --force
+npm install --force
+
+-- Delete node_modules in windows
+rimraf node_modules
+
+===============================================================================================
+dev/workspace-my-libs/apps/my-lib
+    dist
+    e2e
+    node_modules
+    projects
+        my-lib
+            src
+                lib
+                    components
+                    services
+                    utils
+                    styles
+            package.json
+            tsconfig.lib.json
+            
+    src  // demo app goes here
+        app
+        assets
+        environments
+    angular.json
+    package.json
+        "scripts": {
+            "build:my-lib": "ng build my-lib && npm run bundle-styles",
+            "build:my-demo": "ng build my-demo --prod --progress --base-href /my-lib/ --verbose
+    scss-bundle.config.json
+    tsconfig.json
+    tslint.json

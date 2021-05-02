@@ -1,0 +1,11 @@
+// Querydsl project
+C:\Users\cliff\dev\examples\project\practice\spring-boot-angular-deployment
+
+// Plural site spring data example
+C:\Users\cliff\dev\examples\workspace-ps-guitar-db\apps\ps-guitar-db
+
+// my mvc-demo
+C:\Users\cliff\dev\workspace\repo\mvc-repo
+
+// redis session & microserivces example
+C:\Users\cliff\dev\workspace-demo\apps
