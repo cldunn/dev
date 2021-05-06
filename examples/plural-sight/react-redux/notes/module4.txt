@@ -1,0 +1,57 @@
+createCalss
+    var comp = React.createClass({ render: function() { return (...) } });  // obsolete
+    
+JS class 
+    class Comp extends React.Component {
+        constructor(props) {super(props)}
+        render() { return (...); }
+
+Function   // my first choice
+    function Comp(props) { return (...); }
+        1. easier (no extends, constructor)
+        2. avoid "this" confusion (this => container comp), eliminates need for "binding"
+        3. smaller foot print than classes
+        4. better code completion
+        5. easier to test
+        6. performant
+        7. classes maybe removed in future due to hooks
+        
+Arrow function
+    const Comp = (props) => ...  // can omit return only if single expression, alt (...)
+
+NOTE: use let/const, not var
+
+react version greater than 16.8 has hooks, eliminates need for classes
+    hooks => useState, useEffect, useContext, useReducer, useCallback, useMemo, useRef, useImperativeHandle, useDebugValue
+    
+    useState - handle state
+    useEffect - handles side effects, replace lifecylce methods
+    userRef - add reference
+    useMamo - avoid needles re-renders
+    ...
+
+    NOTE: only two lifecycle events hooks can't do (need class
+        componentDidError
+        getSnapshotBeforeUpdate
+        
+    Lifecylce events
+        mounting: constructor(), static getDerivedStateFromProps(), render(), componentDidMount()
+        updating: static getDerivedStateFromProps(), shouldComponentUpdate(), render(), getSnapshotBeforeUpdate(), componentDidUpdate()
+        unmounting: componentWillUnmount()
+        // called when error in constructor, while rendering, in lifecycle method of child component
+        error handling: static getDerivedStateFromError(), componentDidCatch()  
+        
+Container versus Presentaion component        
+
+    Container (smart, stateful, controller view)
+        concerned with behavior and marshaling data and actions, little or not markup, 
+        concerned with passing data and actions down to child compoents, typically stateful
+        know about redux
+            dispatch actions to the store
+            typically use react-redux's connect fucntion at bottom of file
+            => used to avoid pass props thru to child components
+
+    Presentaion (dumb, stateless, view)
+        nearly all markup, no state
+        recieve data/actions via props
+

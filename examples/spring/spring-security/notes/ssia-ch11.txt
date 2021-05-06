@@ -1,0 +1,50 @@
+Hands On: Basic Authentication + MFA
+
+Evirnonment: Client (postman), Buisness Server (biz) (Boot App), Authentication Server (auth) (Boot App)
+
+1. client sendscredetnials to /login at Biz Server
+2. biz calls /user/auth on auth server to authenticate credetials and send client OTP
+3. auth server authenticats using DB, sends client OTP
+
+1. clinet sends OTP to /login on biz server
+2. biz sends OTP to /otp/check on auth server
+3. auth server responds withconfirmation
+4. biz server issues token to client to be used for all subsequent reqests to biz server 
+
+tokens ussually sent via request/response header
+
+token stored by issuer (biz), used to verify future requests
+    limited lifetime
+    avoids sharing credentials in requests
+    can store details (username, authorities)
+    can delegate authentication to other system components
+    
+https://livebook,manning.com/book/api-security-in-action/chapter-5
+https://livebook,manning.com/book/api-security-in-action/chapter-6
+
+JWT - JSON formmated token implementation for web requests
+    3 - parts (separated by dots)
+    json formatted then Base64 encoded
+        header (up to first dot) - meta data (eg. algorithm id used to sign third part)
+        body (between first ando second dots) - payload (for performance keep it minimal)
+    3rd part (optional) is digital signature (alternaitve is to sign header and body)
+    => Hash generated on header and body contents
+    
+    Java JSON Web Token (JJWT) is library to create/parse JWTs
+    https://github.com/jwtk/jjwt#overview
+    
+flow: 
+    2 request filters
+        InitialAuthenticationRequestFilter captures /login (treats username/password) and username/otp 
+        // creates authentication object: contructor with two parameters (username/password (sans authorities) => isAuthenticated(): false 
+        // NOTE: if Authentication object is not set as authenticated and no exception => AuthenticationManager looks for appropriate AuthenticationProvider
+        
+        filter delegates to AuthenticationManager  // returns authentication object: contructor with three parameters (username/password/authorities) => isAuthenticated(): true
+            => manager.authenticate(authentication) // will select provider based upon provider component's "support(authentication.class)" function 
+            // eg. produces authentication that extends UsernamePaswordAuthenticationToken
+            AuthenticationManager uses UsernamePasswordAuthenticationProvider for /login    
+            // eg. produces authentication that also extends UsernamePaswordAuthenticationToken, treat otp as password
+            AuthenticationManager uses OtpAuthenticationProvider for /username/otp          
+        
+        JwtAuthenticationFilter - authenticates jwt token
+        

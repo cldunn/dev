@@ -1,0 +1,226 @@
+OAuth2 - authorization framework
+    user - resource owner, identified by username/password
+    client - application that access the resource on user's behalf, indetified by clientId/clientSecret
+    resource server - application hosting resource owned by users (user data or their authorized actions)
+    authorization server - application authorizing client to access user's resource on on resource server by issuing a token
+    
+1. don't want to send credentials (username/password) with each request or store on browser (in case of web app).(HTTP Basic Authentication)
+2. would prefer to have separate system administrate authentication for all applications
+
+// different flows an application can use to obtain an access token are called grants
+Grants: Authorization code, Password, Refresh Token, Client credentials (OAuth2 in Action https://livebook.manning.com/book/oauth-2-in-action/chapter-6/6)
+    authorization code grant type
+        USER                                    CLIENT                                                              AUTHORIZATION SERVER           RESOURCE SERVER
+            ---- want to access account ------->
+            <-- tell auth. server to allow me --
+            --- please allow client access, here are my credentials/redirect url ---------------------------------->
+                                                      <-- user allows you access, here's authorization code --------
+                                                      --- need access token, here's my client credentials --------->
+                                                      <-- here's access token --------------------------------------
+                                                      --- want user's resource, here's access token ---------------------------------------------->
+                                                      <-- Here are the user details ---------------------------------------------------------------
+            <--- Here's the main page ----------------
+        
+        1. Make authentication request 
+            user send creadential to authorization server only
+            client redirect to authorization server with
+                response_type: code
+                client_id: <value identifying client application itself>
+                redirect_url: where to redirect user after successful authentication, optional if authentication server can derive it from client_id
+                scope: like granted authorities
+                state: CSRF token (defends against CSF attacks)
+                
+            client receives authorization code on redirect_url, validates state, then requests access token
+                
+        2. Obtain access token
+            client sends to authorization server with
+              code: <authorization code>
+              client_id & client_secret - uniquely identifies the clinet application to the authentication server
+              redirect_uri - same one used in step 1
+              grant_type: authorization_code
+              
+        3. Call the protected resource
+            client calls the resource server with the access token in the header => Authorization: Bearer <access_token>
+            
+        NOTE: if authorization code/clientId and client secret compromised, ...
+              a more secure version is Proof Key for Code Exchange (PKCE)
+              RFC 7636: Https//tools.ietf.org/html/rfc7636
+              API Security in Action http://mng.bz/nzvV section 7.3.2
+              
+    password grant type (resource owner credentialz grant type)  // less secure than authorization code grant type
+        client collects user credentials and uses them to obtain access token directly from authorization server
+        assumption is that client an authorization server are built/maintained by same organization
+        USER                                                  CLIENT                                                   AUTHORIZATION SERVER           RESOURCE SERVER
+        ---- want to access account with these credentials -->      -- want access token, here's user credentials ---->
+                                                                    <--  credentials are valid, here is access token --
+                                                                    --- want user's resource, here's access token ----------------------------------->
+        1. Request an access token
+            client sends request to authorization server with 
+                grant_type: password
+                client_id & client_secret - uniquely identifies the clinet application to the authentication server
+                scope: like granted authorities
+                username & password - user credentials, sent as plain text in header
+                
+        2. Use access token to call resources
+            client calls the resource server with the access token in the header => Authorization: Bearer <access_token>
+            
+    client grant type - no user involved, between two application
+        CLIENT                                                     AUTHORIZATION SERVER           RESOURCE SERVER
+              --- want access token, here's client credentials --->
+              <-- credentials are valid, here is access token ----
+              --- want user's resource, here's access token ------------------------------------->
+              
+        1. Request an access token
+            client sends request to authorization server with 
+                grant_type: client_credentials
+                client_id & client_secret - uniquely identifies the clinet application to the authentication server
+                scope: like granted authorities
+                
+        2. Use access token to call resources
+            client calls the resource server with the access token in the header => Authorization: Bearer <access_token>
+    
+    refresh token  
+        tokens should expire
+        refresh token always returned whenever an access token is granted
+        
+        CLIENT                                                     AUTHORIZATION SERVER           RESOURCE SERVER
+              --- want a resource --------------------------------------------------------------->
+              <-- 403 Forbidden, token expired ---------------------------------------------------
+              --- want new access token, here's refresh token --->
+              <-- here is new refresh and access token -----------
+              --- want resource, here's access token -------------------------------------------->
+    
+        1. Request an access token using refresh token
+            client sends request to authorization server with 
+                grant_type: refresh_token
+                refresh_token: <value of the refresh token>
+                client_id & client_secret - uniquely identifies the clinet application to the authentication server
+                scope: like granted authorities
+                
+        2. Use access token to call resources
+            client calls the resource server with the access token in the header => Authorization: Bearer <access_token>
+    
+    Note: each line does not represent a separate request
+    Note: above diagram leaves out step of resource server verifying token with authentication server
+    
+// Vunerabilities of oauth2
+    1. CSRF attack on the client
+    2. stealing client credentials (clientId/clientSecret)
+    3. replaying tokens - tokens get stolen
+    4. token hijacking - tokens get stolen (refresh token)
+        http://blog.intothesymmetry.com/2015/06/on-oauth-token-hijacks-for-fun=and.html
+        http://livebook.manning.com/book/oauth-2-in-action/part-3
+        
+// SSO
+    Use GitHub as authentication server and resource server
+        GitHub users have access to client
+        GitHub must know client (client must register with GitHub at https://github.com/settings/applications/new)
+            requires application name, homepage url, application description, call back url
+            
+        Assumes authorization code grant type
+            a. client registers wtih authorization server (GitHub) for login
+            b. authorization server calls the client back at a defined url (call back url)
+                eg. application name: spring_security_in_action
+                    homepage url: http://localhost:8080
+                    application description:
+                    authorization callback url: http://localhost:8080
+            c. click Register application  // Receive (next page) Client_Id and Client_Secret for your client to use
+
+            Note: GitHub also takes on the role of resource server when serving userInfo to client
+                ClientRegistration.withRegistrationId("github").userInfoUri("https://api.github.com/user")
+            
+    Start working on client application  
+        <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        <artifactId>spring-boot-starter-security</artifactId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        
+        // endpoint to secure
+        @GetMapping("/") public String main() { retrun "main.html" }
+        
+        @Configuration
+        public class SecurityConfig extends WebSecurityConfigurerAdapter (
+            @Override
+            protected void configure(HttpSecurity http) { http.oauth2Login(); http.authorizeRequests().anyRequest().authenticated(); } // add new filter to chain
+            
+        OAuth2LoginAuthenticationFilter // intercepts requests and applies OAuth 2 authentication logic
+
+        ClientRegistration (interface) - this info needed for authentication
+            clientId and clientSecret
+            grant type
+            redirect uri
+            scopes
+
+        // see SSIA pg. 305 for example of all attibutes, only required if using custom authentication server
+        ClientRegistration cr = ClientRegistration.withRegistrationId("github")....  
+            defines clientId, clientSecret, 
+                    scopes, client name, registrationId // all arbitrary
+                    Authorization URI - uri client redirect user to for authentication
+                    Token URI - uri client call to obtain access and refresh token
+                    User Info URI - uri client calls afterobtaining access toekn to get user details
+
+                    Note: URI values for GitHub Authorization server defined at: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
+
+        // class providing instance with values for common providers (Google, GitHub, Facebook, Okta)
+        CommonOAuth2Provider
+            ClientRegistration cr = CommonOAuth2Provider.GITHUB.getBuilder("github").clientId("...").clientSecret("...").build();
+        
+        // register ClientRegistration to use for authentication
+        OAuth2LoginAuthenticationFilter  ----> CientRegistrationRepository  
+                                                          |
+                                                          |--> ClientRegistration (Github)
+                                                          |--> ClientRegistration (Facebook)
+                                                          |--> ClientRegistration (LinkedIn)
+                                                          |--> ClientRegistration (Twitter)
+        
+        NOTE: RegistrationRepository finds ClientRegistration by registration id like UserDetailsService find userDetails by username
+        
+        Implementation: InMemoryClientRegistrationRepository  (simliar to how InMemoryUserDetailsManager works for UserDetails)
+        
+        @Configuration  
+        public class SecurityConfig extends WebSecurityConfigurerAdapter (
+
+            @Bean
+            public ClientRegistrationRepostiroy clientRegistrationRepository() {
+                return new InMemoryClientRegistrationRepsotiroy(clientRegistration());
+            }
+            
+            private ClientRegistration clientRegistration() { return CommonOAuth2Provider.GITHUB.getBuilder("github")....build());
+            
+    Configure OAuth2 using spring boot properties
+        use application.properties to define ClientRegistration and ClientRegistrationRepostiory  (like when defining a datasource)
+            spring.security.oauth2.client.registration.github.client-id=1234...
+            spring.security.oauth2.client.registration.github.client-secret=asdf...
+            
+            Note: cause provider name is github, spring fills in URIs using CommonOAuth2Provider class
+        
+            @Configuration
+            public class SecurityConfig extends WebSecurityConfigurerAdapter (
+                @Override
+                protected void configure(HttpSecurity http) { http.oauth2Login(); http.authorizeRequests().anyRequest().authenticated(); } 
+
+                NOTE: clientRegistration/ClientRegistrationRepository details unnecessary
+                
+        if using custom authorization server we must specify details using property group "spring.security.oaut2.client.provider"
+            spring.security.oaut2.client.provider.myprovider.authorization-uri=<some uri>
+            spring.security.oaut2.client.provider.myprovider.token-uri=<some uri>
+            ...
+            
+            Eg. for google
+                spring.security.oauth2.client.registration.google.client-name=Google
+                spring.security.oauth2.client.registration.google.client-id=
+                spring.security.oauth2.client.registration.google.client-secret=
+                spring.security.oauth2.client.registration.google.redirect-uri-template=http://localhost/login/oauth2/code/google
+                spring.security.oauth2.client.registration.google.authorization-grant-type=authorization_code
+                spring.security.oauth2.client.registration.google.scope=profile email
+
+                spring.security.oauth2.client.provider.google.authorization-uri=https://accounts.google.com/o/oauth2/v2/auth
+                spring.security.oauth2.client.provider.google.token-uri=https://www.googleapis.com/oauth2/v4/token
+                spring.security.oauth2.client.provider.google.user-info-uri=https://www.googleapis.com/oauth2/v3/userinfo
+                spring.security.oauth2.client.provider.google.jwk-set-uri=https://www.googleapis.com/oauth2/v3/certs
+                spring.security.oauth2.client.provider.google.user-name-attribute=profile
+                
+           NOTE: prefer application.properties (simpler)
+                 => unless we have a need for customization of ClientRegistration, like client registration stored in DB or gotten from web service
+                 
+    NOTE: OAuth2AuthenticationToken stored in SecurityContext after successful authentication just like any other authentication object
+        SecurityContextHolder.getContext().getAuthentication();

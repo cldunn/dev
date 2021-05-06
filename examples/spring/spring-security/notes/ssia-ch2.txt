@@ -1,0 +1,47 @@
+@Configuration
+public class UserManagementConfig {
+    @Bean
+    public UserDetailsService userDetailsService() {
+        var userDetailsService = new InMemoryUserDetailsManager();
+        var user = User.withUserName("john").password("12345").authorities("read").build();
+        userDetailsService.createUser(user);
+
+        return userDetailsService;
+    }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+}
+
+@Configuration
+public class WebAuthorizationConfig extends WebSecurityConfigureAdapter {
+
+    // eg. DaoAuthenticationProvider variant using UserDetailsService and PasswordEncoder
+    @Autowired
+    private CustomAuthenticationProvider authenticationProvider;  
+    
+    @Override
+    configure(HttpSecurity http) {
+        http.httpBasic();
+
+        http.authorizeRequests()
+            .anyRequest().authenticated();
+        
+        // Alt.
+        http.authorizeRequests()
+            .anyRequest().permitAll();
+    }
+    
+    @Override
+    configure(AuthenritcationManagerBuilder auth) {
+        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+        
+        // Alt.
+        auth.authenticationProvider(authenticationProvider);
+    }
+}
+
+AuthenticationProvider - interface, default uses UserDetailsService and PasswordEncoder to authenticate
+    see DaoAuthenticationProvider, OpenIdAuthenticationProvider

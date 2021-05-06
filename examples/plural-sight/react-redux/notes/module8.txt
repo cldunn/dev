@@ -1,0 +1,58 @@
+React-Redux - lib that connects react components to redux store
+    Provider - (component) wraps the application so redux store is available, applied at app root
+    Connect -  (function)  connects react components to the store and specify which properties and actions to attach to component
+    
+container components are redux aware, presentational just knows it props
+
+     =>action
+    |   |
+    |   V
+    |  store <=> reducer
+    |   |                            
+    |   |  (react-redux lib) - redux not exclusive to react, react-redux lib binds react to redux)
+    |   V
+     <=react
+
+react-reduc provider
+    // makes redux store accessible to every component in your app (Provider uses react context to pull this off)
+    <Provider store={this.props.store}><App/></Provider>
+
+react-redux connect
+    // Wraps component so its connected to redux store
+    export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);  // both connect parameters are optional functions
+        // which part of the store attached to component as props 
+        // declare what subset of state you want, minimal effects performance
+        function mapStateToProps(state, ownProps) { return {authors: state.authors };
+        
+        // which actions to expose on props (what actions to pass to component props)
+        function mapDispatchToProps(dispatch) {...}
+        
+    mapStateToProps - makes component subscribes to redux store updates, any time store updates function is called
+        // returns an object, each property of object becomes prop on component
+        function mapStateToProps(state) {
+            return { users: state.users };  // "this.props.users" from MyComponent
+        }
+        
+        since each store update fires mapStateToProps - use memoize for performance reselect lib)
+    
+    mapDispatchToProps - what actions we want to expose as props: Alternative declarations
+        1. dispath directly, omit dispatchToProps parameter, then dispatch auto attached to props, 
+           this.props.dispatch(myActionCreator());
+        2. manually wrap action creators in dispatch calls
+           function mapDispatchToProps(dispatch) { return myActionCreator: () => dispatch(myActionCreator()); }
+           => this.props.myActionCreator();
+        3. use bindActionCreators()
+           function mapDispatchToProps(dispatch) { return { actions: bindActionCreators(actions, dispatch) }; } 
+           this.props.actions.myActionCreator()
+        4. const mapDispatchToProps = { myActionCreator }  // prefer because its concise amd simple
+           this.props.myActionCreator();
+           
+Chat (flow):
+    React:   Hey CourseAction, someone clicked save course button
+    Action:  Thanks React, I'll dispatch and action so reducers that care can update state
+    Reducer: Thanks Action. You passed me current state and action, I'll make a new copy and return it
+    Store:   Thanks Reducer, I'll make sure all connected components are aware
+    React-Redux: Thanks store, I'll tell react if it should update UI
+    React:   Ahh, new data passed down via props from store, I'll update UI to reflect changes.
+    
+    

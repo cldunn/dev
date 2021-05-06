@@ -1,0 +1,217 @@
+Resources server - application serving protected resources to clinet
+
+Three options for validating access token
+1. resource server directly calls authorization server to verify issued token (Spring default mechanism)
+    a. user wnat clinet to manage their data
+    b. after obtaining access token clientcall exposed endpoint on  resource server
+    c. resource server directly call authorization server to validate access token
+    
+2. Blackboarding - authorization server and ressource server share database used to store tokens for validation
+    a. when issuing an access token, authorization stores in shared database
+    b. when resource server needs to validate token, looks in database
+    
+3. Cryptographic signatures - JWT Token use this technique
+    a. authorization server signs the token
+    b. resource servervalidates the signature
+
+// resource server directly calls authorization server - use if tokens are mere API keys (eg. UUIDs)
+    1. authorization server exposes "check_token" endpoint , for valid tokens it returns the authorities for the user // "check_token" endpoint from spring
+    2. the resources server calls the "check_token" endpoint for each request (may need to have network failures too)  
+
+    // Authorization server
+    @Configuration  
+    @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+    public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+        ...
+        @Override
+        public void configure(ClientDetailsServiceConfigurer clients) {
+            client.inMemory()
+                .withClient("clientId")
+                .secret("clientSecret")
+                .authorizedGrantTypes("password")
+                .scopes("read")
+            .and()  
+                .withClient("resourceServer")  // As resource server is now also a client, must register resource server too. 
+                .secret("resourceSecret")  // Just credentials, no grant_type or scope
+
+        public configure(AuthorizationServerSecurityConfigurer security) {
+            security.checkTokenAccess("isAuthenticated()");  // could use "permitAll()", but not recommended
+        }
+        
+    
+    // Resource server
+        <dependencies>
+            <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+
+            <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+
+        // parent dependencies not inherited by children
+        <dependencyManagement>
+            <dependencies>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR1<?version>
+                <type>pom</type>
+                <scope>import</scope>
+    
+    
+        @Configuration
+        @EnableResourceServer  // marked deprectated, use configuration methods from spring security
+        public class ResourceServerConfig {
+
+        }
+
+        During the course of normal srping authentication (eg. UserDetails), validate token and get authorities
+            curl -v -XPOST -u resourceId:resourceSecret "http://localhost:8080/outh/token?token=4fb2..."
+            response: { "active":true, "exp": 158307166, "user_name": "john", "authorities": ["read"], "client_id": "client", "scope": ["read"] }
+
+        // in resource server application.properties, identify authorization server check_token uri and resource credentials    
+        application.properties
+            server.port=9090
+
+            security.outh2.resource.token-info-uri=http://localhost:8080/outh/token
+            security.outh2.client.client-id=resourceServer
+            security.outh2.client.client-secret=resourceSecret
+
+// Blackboarding - authorization/resource server share database, requires Spring Security Oauth
+    1. Authorization server stores token in DB whenever generating token for client
+    2. Resource server validates token agains DB whenever validating request
+    
+    TokenStore interface used to manage tokens on both authroization server and resource server,  JdbcTokenStore is a spring implementation
+        a. authorization server  uses token store to generate tokens after authentication  // plays the role of "SecurityContext"
+        b. resource server uses token store to validate token and find user details for authorization
+           i.   authentication filter intercepts HTTP request
+           ii.  token store validates token on the request and retrieves user details
+           iii. user details are stored in SecurityContext and used later for authorization
+           
+    Spring Security provides default InMemoryTokenStore (tokens not persisted across server restart)
+    Spring Security offers JdbcTokenStore, similar to JdbcUserDetailsManager, but manages tokens using DB
+        requires two tables (can be customized)
+            a. oauth_access_token - table to store access tokens
+                CREATE TABLE IF NOT EXISTS `oauth_access_token` (
+                    `token_id` varchar(255) NOT NULL,
+                    `token` blob,
+                    `authentication_id` varchar(255) DEFAULT NULL,
+                    `user_name` varchar(255) DEFAULT NULL,
+                    `client_id` varchar(255) DEFAULT NULL,
+                    `authentication` blob,
+                    `refresh_token` varchar(255) DEFAULT NULL,
+                    PRIMARY KEY (`token_id`));
+            b. oauth_refresh_token - table to store refresh tokens
+                CREATE TABLE IF NOT EXISTS `oauth_refresh_token` (
+                    `token_id` varchar(255) NOT NULL,
+                    `token` blob,
+                    `authentication` blob,
+                    PRIMARY KEY (`token_id`));
+        application.properties
+            spring.datasource.url=jdbc:mysql://localhost/spring?useLegacyDatetimeCode=false&serverTimezone=UTC
+            spring.datasource.username=root
+            spring.datasource.password=
+            spring.datasource.initialization-mode=always
+
+    // authorization server
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <artifactId>spring-boot-starter-jdbc</artifactId>
+                    <artifactId>mysql-connector-java</artifactId>
+
+                <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-oauth2</artifactId>
+
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-dependencies</artifactId>
+                    <version>${spring-cloud.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+
+        @Configuration  
+        @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+        public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+            @Autowired
+            private AuthenitcationManager authenticationManager;
+            
+            @Autowired
+            private DataSource dataSource;
+            
+            @Override
+            public void configure(ClientDetailsServiceConfigurer clients) {
+                client.inMemory()...
+            }
+            
+            @Override
+            public configure(AuthorizationServerEndpointsConfigurer endpoints) {
+                endpoints
+                    .authenticationManager(authenticationManager)
+                    .tokenStore(tokenStore());
+            }
+
+            @Bean
+            public TokenStore tokenStore() {
+                return new JdbcTokenStore(dataSource);
+            }
+            
+        curl -v -XPOST -u clientId:clientSecret http://localhost:8080/oauth/token?grant_type=password&username=john&password=12345&scope=read
+        response: { "access_token":"a9e8...", "token_type": "bearer", "refresh_token":"89sf...", "expires_in": 43199, "scope": ["read"] }
+            
+            <table>.<column>
+            oauth_access_token.token_id == "a9e8..."
+            oauth_refresh_token.token_id = "89sf..."
+        
+    // resource server
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <artifactId>spring-boot-starter-jdbc</artifactId>
+                    <artifactId>mysql-connector-java</artifactId>
+        
+                <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-oauth2</artifactId>
+
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-dependencies</artifactId>
+                    <version>${spring-cloud.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+
+        application.properties
+            server.port=9090
+            
+            spring.datasource.url=jdbc:mysql://localhost:spring
+            spring.datasource.username=root
+            spring.datasource.password=
+            
+        @Configuration
+        @EnableResourceServer  // marked deprectated, use configuration methods from spring security
+        public class ResourceServerConfig extend ResourceServerConfigurerAdapter {
+            @Autowired
+            private DataSource dataSource;
+            
+            @Override
+            public void configure(ResourceServerConfigurer resources) {
+                resources.tokenStore(tokenStore()) 
+            }
+            
+            @Bean
+            public TokenStore tokenStore() {
+                return new JdbcTokenStore(dataSource);
+            }
+        }
+
+        curl -H "Authorization:Bearer a9e8..." "http://localhost:9090/hello"
+        response: Hello!
+        
+        

@@ -1,0 +1,18 @@
+server:
+  port: 8085
+
+spring:
+  session:
+    store-type: redis
+
+sensitiveHeaders: Authorization, Set-Cookie
+
+zuul: 
+  retryable: true
+  routes:
+    order-management-ms: /order-management/**
+
+security:
+  user:
+    name: gateway
+    password: password

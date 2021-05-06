@@ -1,0 +1,152 @@
+Dev process does not generate any actual files, webpack serves processed file in memory
+
+Source code
+    /src
+        <lots of files>
+        
+Production build - web server requires physical files to serve, bundle entire app into 3 files
+    /build
+        index.html // references bunndle.js and style.css
+        bundle.js  // minified and bundled
+        style.css  // minified and bundled
+        
+Need to create an automated build thet does ...
+    1. lint tsx code and runs tests
+    2. bundles and minifys the tsx and css
+    3. generates source maps for tsx/css for debugging
+    4. excludes dev-specific concerns
+       a. exclude dev only reudx store configurations
+    5. build react in prod mode
+       a. eliminate dev features like prop type validation are removed for optimal performance
+    6. generate bundle report
+       a. see app size and id packages in build
+    7. run build on local web server
+    
+// When your Node.js process boots up it will automatically provide access to all existing environment variables 
+// by creating an env object as property of the process global object.
+// https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html
+webpack.config.dev
+    process.env.NODE_ENV = "development";  // process.env.NODE_ENV => roll your own
+    module.exports = {
+        mode: "development",
+        devtool: "cheap-module-source-map",
+        devServer: {... }
+    },
+    plugins: [ // plugins enhance webpacks power
+        new webpack.DefinePlugin({...}],
+        new HtmlWebpackPlugin({...}]
+    ],
+    module: {
+        rules: [
+            ...,
+            {
+                test: /(\.css)$/,
+                use: ["style-loader", "css-loader"],
+            }
+        ]
+    }
+webpack.config.prod
+    const MiniCssExtractPlugin = require("mini-css-extract-plugin");  // minify css and extract it to separate file (prod specific)
+    const webpackBundleAnalyzer = require("webpack-bundle-analyzer");  // create report of bundle (prod specific)
+    process.env.NODE_ENV = "production";   // process.env.NODE_ENV => roll your own
+    module.exports = {
+        mode: "production",
+        devtool: "source-map",
+        // remove devServer
+        ...
+    },
+    plugins: [  // plugins enhance webpacks power
+        new webpackBundleAnalyzer.BundleAnalyzerPlugin({ analyzerMode: "static" }),
+        new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" }),
+        new webpack.DefinePlugin({  // define variables then made available to the libraries that webpack is building
+              // This global makes sure React is built in prod mode (eliminates prop validation and deliver smaller bundle size)
+              "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV), ....
+        }),
+        new HtmlWebpackPlugin({
+            ...,
+            minify: {
+                // see https://github.com/kangax/html-minifier#options-quick-reference
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true
+            }
+        })
+    ],
+    module: {
+        rules: [
+            ...,
+            {
+                test: /(\.css)$/,               // loaders run bottom up, minify first then extract to separate file
+                use: [
+                  MiniCssExtractPlugin.loader,  // extract css to separate file
+                  {
+                    loader: "css-loader",
+                    options: {
+                      sourceMap: true,          // generate css source map for debugging
+                    },
+                  },
+                  {
+                    loader: "postcss-loader",
+                    options: {
+                      plugins: () => [require("cssnano")],  // minify css
+                      sourceMap: true,
+                    },
+                  },
+                ],
+            }
+        ]
+    }
+
+configStore.tsx
+    // use CommonJs (not es6 import/export) to dynamically import at build time
+    if (process.env.NODE_ENV === "production") {
+      module.exports = require("./configureStore.prod");
+    } else {
+      module.exports = require("./configureStore.dev");
+    }    
+configureStore.prod.tsx
+    export default function configureStore(initialState) {
+      return createStore(rootReducer, initialState, applyMiddleware(thunk));
+    }
+configureStore.dev.tsx
+    return createStore(
+        rootReducer,
+        initialState,
+        composeEnhancers(applyMiddleware(thunk, reduxImmutableStateInvariant()))
+    );
+package.json
+    "scripts": {
+        "test": "jest --watchAll",
+        "start:dev": "webpack-dev-server --config webpack.config.dev.js --port 3000",
+        ...
+        "test:ci": "jest",
+        "clean:build": "rimraf ./build && mkdir build",
+        "prebuild": "run-p clean:build test:ci",            // prefix pre - run test/clean before build (run-p => run in parrallel)
+        "build": "webpack --config webpack.config.prod.js", // prod build
+        "postbuild": "run serve:build",                     // prefix post - run after build - launch app server
+        "serve:build": "http-server ./build"                // serve application in ./build with light-weight web server "http-server"
+        
+npm run build  
+=> when build done browser tab opens showing "bundle analyzer" report; could also use "React.lazy" to improve performance 
+=> configure web-server to direct all requests to index.html, let Router handle all requests 
+=> in Express can configure single route that directs all requests to index.html
+
+CHALLENGES
+    1.  add support for administrating authors, make sure you cannot delete author who still has course
+    2.  add filters at top of course list table
+    3.  hide empty course list
+    4.  warn user with message if leaving ManageCourse form with unsaved changes
+    5.  enhance client/server validation on course form to be stricter about data entered
+    6.  handle 404 on edit course on ManageCourse page when an invalid course slug provided (hint add logic in mapStateToProps)
+    7.  show # courses in header
+    8.  add pagination to course table
+    9a. sort course table by title (new course is not always placed at bottom); 
+    9b. add ddlb above table to allow sorting by different columns (use mapStateToProps)
+    10. keep history of course changes to enable user to restore changed course

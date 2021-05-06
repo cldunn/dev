@@ -1,0 +1,159 @@
+// hooks facilitate using functioal components instead of classes, which are more precise
+    useState
+    useRef
+    useEffect
+    
+    useContext
+    useReducer
+    userCallback
+    userMemo
+
+1. called only from functional compoonents
+2. only call hooks at top level  // not in functions or conditionals, must be called in order, check via eslint-plugin-react-hooks
+
+// eslint-plugin-react-hooks
+package.json
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "prettier": "2.0.5",
+    "react-hooks": "^1.0.1"
+  }
+.eslintrc.json
+    {
+      "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "jsx": true
+        }
+      },
+      "plugins": ["react-hooks"],
+      "rules": {
+        //additional rules here
+        "semi": [2, "always"],
+        "react-hooks/rules-of-hooks": "error"
+      }
+    }
+
+// => below violates hooks in conditionals ...
+// if (random_boolean === true) {
+//   const [isLoading,setIsLoading] = useState(true);
+// } else {
+//   const [isLoading,setIsLoading] = useState(false);
+// }
+
+// put the conditional in the initializer instead
+const [isLoading, setIsLoading] = useState(random_boolean === true);
+
+
+useContext() - via context api, access context in any functional components
+=> store config info in app and access in any functional component
+
+    App.js
+        export const ConfigContext = React.createContext();
+        
+        const configValue = {
+          showSpeakerSpeakingDays: true,
+        };
+        
+        const pageToShow = (pageName) => {
+          if (pageName === 'Home') return <Home />;
+          if (pageName === 'Speakers') return <Speakers />;
+          return <div>Not Found</div>;
+        };
+        
+        return (
+            <ConfigContext.Provider value={configValue}>
+              <div>{pageToShow(pageName)}</div>
+            </ConfigContext.Provider>
+        );
+        
+    Speakers.js
+        import {useContext} from 'react';
+        import {ConfigContext} from "./App";
+        
+        const Speakers = ({}) => {
+            const context = useContext(ConfigContext);
+
+            return {
+                ...
+                {context.showSpeakerSpeakingDays === false ? null : (  // didn't have to pass thru props
+                    ...
+                )}
+                
+// useState is built on useReducer         
+reducer takes in a state and action and return a new state: (curState, action) => newState
+    import {useReducer } from 'react';
+    
+    // const [speakerList, setSpeakerList] = useState([]);
+    // const [speakerList, setSpeakerList] = useReducer((state, action) => action, []);
+    
+     function speakersReducer(state, action) {
+       switch (action.type) {
+         case 'setSpeakerList': {
+           return action.data;
+         }
+         ...
+         default:
+           return state;
+       }
+     }
+     const [speakerList, dispatch] = useReducer(speakersReducer, []);  // update speakerList with dispatch via speakersReducer
+
+     useEffect(() => {
+        ...
+        const speakerListServerFilter = SpeakerData.filter(({ sat, sun }) => {
+                return (speakingSaturday && sat) || (speakingSunday && sun);
+        });
+        
+        //setSpeakerList(speakerListServerFilter);
+        dispatch({
+            type: 'setSpeakerList',
+            data: speakerListServerFilter,
+        });
+     });
+ 
+     const heartFavoriteHandler = (e, favoriteValue) => {
+        ...
+        dispatch({
+            type: favoriteValue === true ? 'favorite' : 'unfavorite',
+            sessionId
+        });
+        
+// memoization - optimization technique fro return cached results
+
+useCallback/React.memo - memoize a function
+  Speakers.js
+      const heartFavoriteHandler = useCallback((e, favoriteValue) => {  // only invoked if parameters changed, else use cached value
+        ...
+        const sessionId = parseInt(e.target.attributes["data-sessionid"].value);
+        dispatch({
+          type: favoriteValue === true ? "favorite" : "unfavorite",
+          sessionId,
+        });
+      }, []);
+      
+      return (
+        ...
+        {speakerListFiltered.map(
+            <SpeakerDetail
+                ...
+                onHeartFavoriteHandler={heartFavoriteHandler}
+            />
+      )
+      
+  SpeakerDetail.js
+      const SpeakerDetail = React.memo( (..., heartFavoriteHandler) => {  // return cache of SpeakerDetail
+        return (...)
+      });
+      
+useMemoize - memoize a value
+  const newSpeakerList = useMemo(  // only calculate newSpeakerList when dependency (in array) changes
+      () =>
+        speakerList
+        .filter(...)
+        .sort(...),
+      [speakingSaturday, speakingSunday, speakerList]
+ );

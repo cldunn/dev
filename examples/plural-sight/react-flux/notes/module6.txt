@@ -1,0 +1,63 @@
+props - enable passing data to components
+state - local data in components that changes over time
+lifecycle methods - class based component events, 
+    => can inititialize componetns and attach specific behavior at cetein points in time 
+keys - facitlitates manipulating dynamic child components by react via attaching keys to the elements
+
+props 
+    pass data down to child elements
+    look like attributes
+    immutable - can't change props,  if necessary then use functions provided by parent
+
+    function Avatar(props) { return ( <img src={"images/" + props.userName} /> ) }
+    <Avatar userName="Cliff" />
+    
+state - is muttable
+    not accessed directly
+    eg. values for form fields; 
+    
+    function
+        state.userName // use hooks (see module 7)
+    class
+        state = {userName: "Cliff"};
+        render() { return ( <input value={this.state.userName} />; ) }
+        
+lifecylce methods - only exist on class components, 
+    function
+        functions use hooks instead (see module 7)
+    class
+        componentDidMount - after component mounted, good time to interact with others (subscriptions, requests timers, ...)
+        componentDidUpdate - called after component flushed to the DOM
+        componentWillUnmount - run after component unmounted from the DOM, destroy related resources
+
+        class Example extends React.Component {
+            state = { courses: [] };
+            componentDidMount() {
+                // pretend there is an api (promise) called "getCourses()"
+                getCourses().then((courses) => {
+                    // cannot access this.state directly, use setState()
+                    this.setState({courses: courses});
+                })
+            }
+            
+            render() {
+                return (
+                    <>
+                        <table>
+                            ...
+                            <tbody>
+                                // components created dynamicall require a key so react can add/remove/order components
+                                {this.state.courses.map((course) => {
+                                    return (
+                                        <tr key={course.id}>
+                                            <td>{course.title}</td>
+                                            <td>{course.authorId}</td>
+                                        </tr>
+                                    )
+                                })}
+                    </>
+                )
+            }
+        
+NOTE: {" "} === <br/> in JSX     
+NOTE: () => {...}  // since they have no context, they always inherit "this" from enclosing scope (eg. component)

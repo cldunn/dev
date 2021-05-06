@@ -1,0 +1,95 @@
+Form
+    Validation
+    Redirects
+    Reusable inputs
+    User notifications
+    Saving and population on load
+
+Controlled components:
+    Any <input> with a value is called a controlled component
+    if <input has no value propert, behaves normally (eg.uncontrolleed) // <input type="text" />
+    Element's value always matches the value of the assigned prop       // <input type="text" value={props.course.title} />
+    => 1. declare change handler for each input, 2. declare state
+
+smart component
+    function SmartComp = props => {
+        const [course, setCourse] = useState({
+            id: null,
+            slug: "",
+            title: null
+        });
+
+        handleChange(evt) { // [...] => set property on this object based on value of this variable (eg. event.target.name), "computed property"
+            const updatedCourse={...course, [evt.target.name]: evt.target.value};  // assume input name attrib matches props attrib
+            setCourse(updatedCourse);
+        }
+
+        // Alternative syntx:
+        // handleChange({target}) { setCourse({...course, [target.name]: target.value}); }
+
+        render(<DumbComp course={course} onChangeHandler={handleChange} />
+
+dumb component
+    function DumbComponent(props) {
+        return <form> 
+            <select name="title" value={props.course.title || ""} onChange={props.onChangeHandler} />  // for JSX, select use value with props, not options
+
+
+For reusable components 
+    1. pass in element attribute values via props
+    2. always declare propTypes
+
+    import PropTypes from 'prop-types'
+    function MyComp(props: MyComp.propTypes) { return ( <input type="text" id={props.id} name={props.name} ...  /> }
+
+    MyComp.propTypes = { id: PropTypes.string.isRequired, name: PropTypes.string.isRequired, ... };
+    MyComp.defaultProps = { error: "" };
+
+Notifications
+    npm install react-toastify@5.1.1
+    
+    import {ToastifyContainer} from "react-toastify";
+    import "react-toastify/dist/ReactToastify.css"
+    function App() {
+        // set toastify messaing globally, see https:github.com/fkharda/react-toastify@api for ToastContainer attributes
+        return ( <div className="container-fluid"> <ToastContainer autoClose=3000 hideProgressBar=true> ... </ToastContainer> </div> );
+        
+    import { toast } from "react-toastify";
+    function SmartComponent() {
+        fucntion handleSave(evt) { evt.preventDefault(); /* do the save */ toast.success("Course saved.");
+        return ( <DumbComponent onSaveHandler="{handleSave})
+
+Validation
+    function SmartComponent() {
+        const [errors, setErrors] = setState({});
+        
+        function formIsValid() { 
+            _errors = {}; if (!course.title) {_errors.title = "Title is required"; }; setErrors(_errors);
+            return Object.keys(_errors).length === 0; // Object.keys(_errors) return array of _errors attribute names
+        }
+        
+        fucntion handleSave(evt) { evt.preventDefault(); if (!formIsValid()) return; /* do the save */ toast.success("Course saved.");
+        
+        return ( <DumbComponent errors={errors}; ... />
+        
+    function DumbComponent() {
+        return {
+            ...
+            { props.errors.title && <div className="alert">{props.errors.title}</div> }
+        }
+        
+Populate form via url
+    useEffect(() => {
+        const slug = props.match.params.slug; // from the path 'courses/:slug
+        const promise = fetch("http://localhost:8080.course/" + "?slug=" + slug).then(...).catch(...);  // The then() method returns a Promise
+        promise.then(_course => { setCourse(_course)" });
+    }, [props.match.params.slug]);  // want to watch "slug" and set course accordingly, as it comes from url it won't change
+    
+    // example of fetch chaining then(...)
+    fetch(...)
+    .then(response => response.json())
+    .then(data => { console.log('Success:', data); })
+    .catch((error) => { console.error('Error:', error); });
+    
+    ??? Is component removed from DOM when navigating away ???
+    React-router: never unmount a component on a route once mounted, even if route change.

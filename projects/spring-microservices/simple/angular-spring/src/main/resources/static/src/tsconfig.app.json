@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../webapp",
+    "types": []
+  },
+  "files": [
+    "main.ts",
+    "typings.d.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "projects",
+    "src/test.ts",
+    "src/**/*.spec.ts"
+  ]
+}

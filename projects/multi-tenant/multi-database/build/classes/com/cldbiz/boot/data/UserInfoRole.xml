@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<dbo.USER_INFO_ROLE USER_INFO_ID="1" ROLE_ID="1" />
+	<dbo.USER_INFO_ROLE USER_INFO_ID="1" ROLE_ID="2" />
+	<dbo.USER_INFO_ROLE USER_INFO_ID="2" ROLE_ID="2" />
+</dataset>

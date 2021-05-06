@@ -1,0 +1,56 @@
+React Router - client side routing
+    
+    import {Route, BrowserRouter, Link} from 'react-router-dom'
+    
+    1. Wrap application entry point with<BrowserRouter>
+        render(
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>,
+            document.getElementById("root")
+        );
+        
+    2. <Route> has props declaring component to load for url
+        <Switch>                                             // <Switch> makes router stop looking after 1st matched route
+            <Route exact path="/" component={HomePage} />    // "exact" means route path must be matched exactly
+            <Route path="/user/:id" component={UserPage} />  // :id represents parameter
+            <Route path="/user" component={UserPage} />      // in Switch, more specific route should be listed first
+            <Redirect from="/oldPath" to="/newPath" />       // redirection
+            { this.state.redirectToNames &&                  // conditional redirect
+                <Redirect to="/names" /> 
+            } 
+            <Route component={PageNotFound} />               // default route, always matches if reached
+        </Switch>        
+    
+    3. <Link>, <NavLink> - avoids posting to server (abstraction of anchors)
+        const activeStyle = { color: orange };
+        
+        <Link exact to="/user/1">Cliff</Link>  // navigates to specified route with matching path
+        <NavLink to="/user/1" " activeClassName="active">Cliff</NavLink>  // applies class "active" when NavLink selected
+        <NavLink exact to="/" activeStyle={activeStyle}>Cliff</NavLink> // applies styling when NavLink selected
+    
+    Any component loaded with <BrowserRouter> recieve props.history
+        // can programatically set url
+        props.history.push('new/path');
+
+        // url path params and query string params available to component through props too
+        <Route path="myapp.com/course/:slug" component({Course} />;
+        <Link to="myapp.com/course/clean-code?module=3">Test</Link>
+        
+        props.match.params.slug // clean-code
+        props.location.query    // {module : 3}
+        props.location.pathname // /course/clean-code?module=3
+        
+    Alternative way to declare functional components:
+        const Course = props => {
+            return (
+                <>
+                    <h2>Course</h2>
+                    {props.match.params.slug}
+                </>
+            )
+        }
+    
+    import { Prompt } from "react-router-dom";
+    const [isBlocking, setIsBlocking] = useState(true);
+    <Prompt when={isBlocking} message="Navigate away?" />  // conditionally invokes when router loaded component navigates away

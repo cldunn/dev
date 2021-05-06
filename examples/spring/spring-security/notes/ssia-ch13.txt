@@ -1,0 +1,218 @@
+authorization server (actor) for all grant types - currently we must roll our own
+    Authorization code grant type
+    Password grant type
+    Client credentials grant type
+    Refresh token grant type
+    
+Monitor all spring security project features:  http://mng.bz/Qx01
+
+Spring Security OAuth has been deprecated: http://mng.bz/v91m
+
+Third part authorization server alternatives: keycloak, okta
+
+Spring is developing an Authentication server implementation of its own
+    http://mng.bz/4Be5
+    
+To start development of an authentication server you need 
+    <dependencies>
+        <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        
+        <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+    
+    // parent dependencies not inherited by children
+    <dependencyManagement>
+        <dependencies>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>Hoxton.SR1<?version>
+            <type>pom</type>
+            <scope>import</scope>
+    
+    // implement user management, register at least one client and select grant types to support
+    
+    // user management
+    1. The request is intercepted by the authentication filter
+    2. Authentication  responsibility is delegated to the authentication manager.
+    3. The authentication manager users the authentication provider, which implements the authentication logic
+    4. The authentication provider finds the user with the user detail service and validates the password using a password encoder
+    5. The result of the authentication is returned to the filter
+    6. Details about the authentication entity are stored in the security context.
+
+    @Configuration
+    public class WebSecurityConfig extends WebSecurityConfigurerAdpater {
+        @Bean 
+        UserDetailsService uds () {  // can use any implementaion
+            var uds = new InMemoryUserDetailsManager()
+            var u = User.withUserName("john").password("12345")...build();
+            uds.createUser(u);
+            return uds;
+        }
+        
+        @Bean
+        public PasswordEncoder passwordEncoder() { ... }  // // can use any implementaion, eg. return NoOpPasswordEncoder.getInstance()
+        
+        @Bean
+        public AuthenticationManager authenticationManagerBean() { return super.authenticationManagerBean() }
+        
+    @Configuration
+    @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+    public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+        @Autowired
+        AuthenticationManager authenticationManager;
+        
+        ...
+
+        @Override
+        public void configuer(AuthorizationServerEndpointsConfigurer endpoints) {
+            endpoints.authenticationManager(authenticationManager);
+        }
+    }
+    
+    // client registration
+    authorization server stores user and client credentials (username/password, clientId/clientSecret)
+        ClientDetails - defines client  (eg. UserDetails equivalent)
+        ClientDetailsService - retrieve ClientDetails by thier ids (eg/ UserDetailsService equivalent)
+        
+        InMemoryClientDetailsService  impements ClientDetailsService (eg. InMemoryClientDetailsService equivalent)
+        JdbcClientDetailsService - impements ClientDetailsService (eg. JdbcUserDetailsManager equivalent)
+        
+    @Configuration
+    @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+    public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+        ...
+        @Override
+        public void configure(ClientDetailsServiceConfigurer clients) {
+            client.inMemory()
+                .withClient("clientId")
+                .secret("clientSecret")
+                .authorizedGrantTypes("password")
+                .scopes("read")
+       ...
+      
+    ClientRegistrationRepository (interface - like UserDetailsService; 
+        ClientRegistration  findByRegistrationId(java.lang.String registrationId)
+        
+        // implementation constructor
+        InMemoryClientRegistrationRepository(java.util.Map<java.lang.String,ClientRegistration> registrations))
+        
+    The endpoints defined are:
+        Authorization Endpoint  // Spring Security: /oauth/authorize
+        Token Endpoint          // Spring Security: /oauth/token
+        Redirection Endpoint    <client specific>
+    => The authorization endpoint and token endpoint are both located on the authorization server. 
+    => The redirection endpoint is located in the client application.
+
+    // password grant type 
+       => user, thru client, authorizes username/password
+       => use client credentials and HTTP Basic, sending needed details as query parameters 
+       1. request a token at "/oauth/token" endpoint  // endpoint auto-generated by spring security
+       2. query parameters
+           a. grant_type: password
+           b. username/password - user credentials
+           c. scope - grated authorities
+
+           // from curl documentation for http basic:  -u, --user <user:password>
+           curl -v -XPOST -u clientId:clientSecret http://localhost:8080/oauth/token?grant_type=password&username=john&password=12345&scope=read
+
+           response: { "access_token":"...", "token_type":"bearer", "expires_in":42367, "scope":read" }
+        
+    // authorization code grant type
+        a. user redirected to authenticate directly with the authorization server
+           authorization server uses redirectURI to redirect user once authentication completes (client endpoint)
+        b. which then calls the client with an authorization code 
+        c. the client uses the authorization code and its credentials to get an access code
+        d. client uses access code to get resource from resource server
+    
+    
+        http://localhost:8080/oauth/authorize?response_type=code&client_id=clientId&scope=read  // "outh/authorize" endpoint generated by spring security
+        => authorization server redirects you to login page, after authentication it redirects you to redirectUri()
+        http://localhost:9090/home?code=qeSLSt
+        =>redirect to client with authorization code after authentication, code can only be used once else get an error
+        curl -v -XPOST -u clientId:clientSecret http://localhost:8080/oauth/token?grant_type=authorization_code&scope=read&code=qeSLSt
+        => client requests an access code
+        
+        response: { "access_token":"...", "token_type":"bearer", "expires_in":43052, "scope":read" }
+        
+        @Configuration
+        public class WebSecurityConfig extends WebSecurityConfigurerAdpater {
+            ...
+            @Override
+            protected coid configure(HttpSecurity http) { 
+                http.formLogin() 
+            }
+        
+        @Configuration
+        @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+        public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+            ...
+            @Override
+            public void configure(ClientDetailsServiceConfigurer clients) {
+                client.inMemory()
+                    .withClient("clientId")
+                    .secret("clientSecret")
+                    .authorizedGrantTypes("authorizatioin_code")
+                    .redirectUris("http://localhost:9090/home")
+                    .scopes("read")
+            ...
+
+            // can have different grants for different clients (not necessarily a good idea)
+            client.inMemory()
+                .withClient("clientId1").secret("clientSecret1").authorizedGrantTypes("authorizatioin_code").scope("read").redirectUris("...")
+                .withClient("clientId2").secret("clientSecret2").authorizedGrantTypes("authorizatioin_code". "password").scope("read").redirectUris("...")
+                
+    // client credentials grant type
+    => used for backend 2 backend communication (alternative to API Key authentication)
+        1. client passes clientId/clientSecret to authorization server
+        2. client gets back access token
+        3. client uses access token to access resource server
+
+        @Configuration
+        @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+        public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+            ...
+            @Override
+            public void configure(ClientDetailsServiceConfigurer clients) {
+                client.inMemory()
+                    .withClient("clientId")
+                    .secret("clientSecret")
+                    .authorizedGrantTypes("client_credentials")
+                    .scopes("info")  // since only client credentails required to get access toekn to resource server, limit scope
+            ...
+      
+      curl -v -XPOST -u clientId:clientSecret http://localhost:8080/oauth/token?grant_type=client_credentials&scope=info
+      
+      response: response: { "access_token":"...", "token_type":"bearer", "expires_in":4300, "scope":info" }
+      
+    // refresh token grant type
+    => used with authorization_code and password grant typres
+    => when user authenticates they get access and refresh tokens, 
+       can use it to request another access/refresh token when access token expires but before refresh token expires
+      
+       @Configuration
+       @EnableAuthorizationServer   // instruct spring boot to confugre OAuth2
+       public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
+           ...
+           @Override
+           public void configure(ClientDetailsServiceConfigurer clients) {
+               client.inMemory()
+                   .withClient("clientId")
+                   .secret("clientSecret")
+                   .authorizedGrantTypes("authorizatioin_code", "refresh_token")
+                   .redirectUris("http://localhost:9090/home")
+                   .scopes("read")
+
+        http://localhost:8080/oauth/authorize?response_type=code&client_id=clientId&scope=read  // "outh/authorize" endpoint generated by spring security
+        => authorization server redirects you to login page, after authentication it redirects you to redirectUri()
+        http://localhost:9090/home?code=qeSLSt
+        =>redirect to client with authorization code after authentication, code can only be used once else get an error
+        curl -v -XPOST -u clientId:clientSecret http://localhost:8080/oauth/token?grant_type=authorization_code&scope=read&code=qeSLSt
+        => client requests an access code
+
+        response: { "access_token":"...", "refresh_token": "...", "token_type":"bearer", "expires_in":43052, "scope":read" }
+        
+        curl -v -XPOST -u clientId:clientSecret http://localhost:8080/oauth/token?grant_type=refresh_token&scope=read&code=...
+                      
+        response: { "access_token":"...", "refresh_token":"...", "token_type":"bearer", "expires_in":42367, "scope":read" }

@@ -1,3 +1,25 @@
+-- set SSH keys for VM (id_rsa and id_rsa.pub must be the file names for github) see https://gist.github.com/adamjohnson/5682757
+Open git bash 
+Go to: ~/.ssh. (Likely C:\Users\[YOUR-USER-NAME]\.ssh\ on Windows)
+Within the .ssh folder, there should be these two files: id_rsa and id_rsa.pub. 
+If necessary, create the SSH keys. From within .ssh folder type: ssh-keygen -t rsa -C "your_email@example.com".
+Open id_rsa.pub in your favorite text editor and copy context exactly (no extra lines)
+Paste it into GitHub at: HOME >> top-rt ddlb: settings >> LHS: SSH & GPG Keys <=> RHS: New SSH Key btn. 
+    => naming convention: <workstation-name>-<YYYY-MM-DD>
+    => may have to reboot gitbash in order to sucessfully push
+
+-- create new project into new repository via gitbash (from root dir of new project <=> repo root)
+    via github: create new repo in github => eg. git@github.com:cldunn/dev.git
+
+    -- from root dir of new project on VM
+    git init
+    git add -A
+    git commit -m 'Added my project'
+    git remote add origin <remote-url>
+    git push -u -f origin master           
+        => assumes default bransh set to master
+        => to set default branch: HOME >> top-rt ddlb: settings >> LHS: repositories => RHS : Repository Default Branch
+        
 -- from apps directory
 git clone https://github.com/cldunn/demo-2.git
 
@@ -43,4 +65,5 @@ git push --set-upstream origin dev-branch
 
 -- synch changes in local repository with remote repository
 git push
+
 

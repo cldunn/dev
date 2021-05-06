@@ -1,0 +1,92 @@
+
+Prefiltering - framework filters the values of the parameters before calling the method
+    a. Can only be used if method recieves as a parameter an array or collection of objects
+       => array/collection parameter is filtered according to rules
+    
+    SpEL used in @PreFilter(...) where "filterObject" refers to any element in the array/collection parameter
+    
+Postfiltering - The framework filters the returned value after the method call
+    a. Can only be used if method returns an array or collection of objects
+       => result is filtered based upon rules
+
+Call is always made
+AOP process the function call
+
+
+// Must enable
+@Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class ProjectConfig {...}
+
+// @PreFilter
+    // Define array/collection element
+    public class Product {
+        private String name;
+        private String owner;
+
+    @Service
+    public class ProductService {
+
+        // "filterObject" represents product, 
+        // "authentication" always available in @PrefFilter/@PostFIlter SpEL from SecurityContext
+        @PreFilter("filterObject.owner == authentication.name")  
+        public List<Product> sellProducts(List<Product> products) {...}
+
+    when the parameter list is modified according to the rules, the original list is modified. The array/collection parameter must be mutable
+    => no new list is created,  if the list is immutable an exception is thrown
+
+    Mutable
+    Foo[] array = [...];  
+    List<Foo> list = Arrays.asList(array) ; 
+
+    Immutable
+    Foo[] array = [...];  
+    List.of(array)
+    
+// @PostFiltering
+    Only works with methods having return type of array/collection
+    => applies SpEL expression upon result array/collection
+    
+    @Service
+    public class ProductService {
+    
+        // "filterObject" represents product element in the result array/collection
+        @PostFilter("filterObject.owner == authentication.principal.username")
+        public List<Product> findProducts() {
+            List<Product> products = new ArrayList<>();
+    
+            products.add(new Product("beer", "nikolai"));
+            products.add(new Product("candy", "nikolai"));
+            products.add(new Product("chocolate", "julien"));
+    
+            return products;
+        }
+    }
+
+    curl -u julien:12345 http://localhost:8080/find
+    response: [{"name": "chocolate", "owner": "julien"}]
+    
+// filtering Spring Data @Repository
+    a. @PreFilter/@PostFilter
+    b. Directly applying filters in queries //@Query(...) or named queries that filter via where clause
+    
+    More efficient to @Query(...) than @PostFilter(...), why get the record only to filter it, just dont get the fitlered record
+    
+    // Can facilitate SpEL in @Query(...)
+    @Configuration
+    @EnableGlobalMethodSecurity(prePostEnabled = true)
+    public class ProjectConfig {
+    
+        @Bean
+        public SecurityEvaluationContextExtension securityEvaluationContextExtension() { // needed to facilitates SpEL in @Query
+            return new SecurityEvaluationContextExtension();
+        }
+        ...
+        
+    // not necessary to put the @Repository annotation on interfaces that extend JpaRepository, bean automaically created
+    public interface ProductRepository extends JpaRepository<Product, Integer> {
+
+        // note the use of #{authentication.principal.username}
+        @Query("SELECT p FROM Product p WHERE p.name LIKE %:text% AND p.owner=?#{authentication.principal.username}")
+        List<Product> findProductByNameContains(String text);
+    }

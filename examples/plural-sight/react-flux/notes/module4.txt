@@ -1,0 +1,63 @@
+React vs MVC
+    M - components can have local state or redux handles stateoutside of React
+    V - React  is the V
+    C - Components focused on only logic, like controllers, pattern called "Controller Views"
+        * Container vs Presentation components
+        
+JSX - handles mark up
+    "HTML" in javascript, compiled to js by Babel
+    differences: className, htmlFor, ...
+    
+    function about() {
+        return <h1>About</h1>;  // compiles to: return React.createElement('h1', null, 'About');
+    ]
+    
+    can use double brackets for inline style
+    <h1 style={{color: "white"}}>About</h1>  // 1st { -> about to write js in JSX, 2nd { -> Object literal
+    
+    see: bablejs.io.repl
+    
+Virtual DOM
+    Monitors component changes; effect virtual dom; compare, calculate and perform minmal DOM changes // nothing to execute or configure
+    Also provides synthetic events, Isomorphic support, react native
+    
+Separation of concerns
+    angular: js in html, eg. ng-repeat
+    react: html in js, eg. JSX
+    
+    html/js/css always require sync, instead of separating by technology, group by component (which is primary concern)
+    Container vs Presentation components mimic technology separation
+    
+    When using webpack you can isolate component css: import './componentStyle.css';
+    
+    webpack.config.js
+        module: {
+          loaders: [
+            {test: /\.css$/, loader: 'style-loader!css-loader'}
+          ]
+        }
+
+    makes debugging easier
+    
+Ways to declare React Components 
+    createClass (old), ES class(renders JSX), Function(returns JSX), Arrow function (returns JSX but not performant)
+    
+    ES class: 
+    // post version 16.8, ES class still only way to support componentDidError & getSnapshotBeforeUpdate
+    class HelloWorld extends React.Component {
+        // initialize state in consturctor
+        constructor(props) { super(props) }
+        
+        // returns JSX via render() method
+        render() { 
+            return ( <h1>Hello</h1> ); 
+        }
+    }
+    
+    Function: // better than ES class, also avoids "this"
+    function HelloWorld(props) { 
+        // assumes return is equivalent render() method
+        return ( <h1>Hello</h1> ); 
+    }
+    
+    

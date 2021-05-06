@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cldbiz.angularSpring.dao.mybatis.UserProfileMapper" >
+
+    <!--<cache />-->
+    <resultMap id="userProfileMap" type="com.cldbiz.angularSpring.domain.UserProfile" >
+        <id column="ID" property="id" jdbcType="BIGINT" />
+        <result column="FIRST_NAME" property="firstName" jdbcType="VARCHAR" />
+        <result column="LAST_NAME" property="lastName" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="DS_KEY" property="dsKey" jdbcType="VARCHAR" />
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+        <result column="CREATED_DATE" property="createdDate" jdbcType="DATE" />
+        <result column="MAINTAINED_BY" property="maintainedBy" jdbcType="VARCHAR" />
+        <result column="MAINTAINED_DATE" property="maintainedDate" jdbcType="DATE" />
+    </resultMap>
+
+    <select id="findAll" resultMap="userProfileMap">
+    	SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, DS_KEY, CREATED_BY, CREATED_DATE, MAINTAINED_BY, MAINTAINED_DATE 
+    	  FROM USER_PROFILE
+    </select>
+</mapper>

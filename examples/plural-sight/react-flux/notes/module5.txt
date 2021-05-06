@@ -1,0 +1,60 @@
+node_modules
+public
+    index.html
+        <body>
+            <div id="root"></div>
+        </body>
+src
+    api
+    components
+        common
+        homepage
+            homepageView.tsx
+            homepage.scss
+            homepage.tsx
+    index.tsx
+tools
+
+
+ES import syntax
+    import React from 'react';
+    
+component function  - renders any JSX returend
+    // JSX assumes any component startng with uppercase are react components, lowercase is html
+    function HomePage() {
+        function getPage() { ... }  // eg. returns JSX
+        return (
+            // requires a single root element, <> represents react fragement
+            <>
+                <h2>Home</h2>
+                { getPage() } // to execute js inside JSX use brackets
+            </>
+        );
+    }
+    
+    // By default everything is private, need to export
+    export default HomePage;
+    
+ component class
+    class AboutPage extends React.Component {
+        // just one required method
+        render() {
+            return (
+                ...
+            );
+        }
+    }
+    
+    export default AboutPage;
+ 
+ index.tsx - application entry point
+    // bring in files to app from node_modules
+    import "bootstrap/dist/css/bootstrap.min.css";
+    
+    // bring in component
+    import HomePage from './HomePage/HomePage.tsx';
+    
+    // render component in index.html at <div id="root">
+    render(<HomePage />, document.getElementById("root"));
+
+

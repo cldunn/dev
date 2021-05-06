@@ -1,0 +1,106 @@
+hooks bring state and lifecycle to react functional components
+    hooks can be composed into custom hooks
+    
+
+    const [emailValid, setEmailValid] = useState(false);
+    const emailReducer = (state, action) => {  // state is current email, action is new eamil, returns proposed new email value (action)
+        const isValidEmail = validateEmail(action);
+        setEmailValid(isValidEmail);
+        return action;
+    };
+
+    const [email, setEmail] = useReducer(emailReducer, '');  // use emailReducer to sync email & emailValid
+    
+    setEmail('Cliff.dunn@fiserv.com'); // calls emailReducer(), validates, sets emailValid and sets email with return value
+    
+    userInterval(()={...}, 1000);  // hook just like js setInterval(...) 
+     
+     
+    // custom hook - wrap eamil logic and count lgoic separatly, return requirements for rendering
+    function useEmailValidation(seconds) {  // pass in delpay interval for counting
+      const validateEmail = (email) => {...};
+      const [emailValid, setEmailValid] = useState(false);
+      const emailReducer = (state, action) => {...};
+      const [email, setEmail] = useReducer(emailReducer, '');
+    
+      const maxSeconds = seconds;
+      const [count, setCount] = useState(maxSeconds);
+      useInterval(() => {...);
+    
+      const retObject = { setEmail, count, email, emailValid, setCount };  // collect requirements for rendering and return
+      return retObject;
+    }
+    
+    export default useEmailValidation;  // custom hook specific to redering,  more practical if more generic
+    
+    const { setEmail, count, email, emailValid, setCount } = useEmailValidation(30);
+
+    // invoke in component - react hook functions can call other functions with hooks
+    // const [speakerList, dispatch] = useReducer(speakersReducer, []);
+    // const [isLoading, setIsLoading] = useState(true);
+    
+        // can use useReducer to manage state of several values
+        // reducer must be re-written to accomodate mulitple values in action
+        const [{ isLoading, speakerList }, dispatch] = useReducer(speakersReducer, {
+            isLoading: true,
+            speakerList: [],
+        });
+
+        // reducer
+        const speakersReducer = (state, action) => { // think of parameters as old/new value sort of
+            function updateFavorite(favoriteValue) {
+                return state.speakerList.map((item, index) => {...}  // state is composite values
+            }
+            ...
+                return { ...state, speakerList: action.data, isLoading: false };
+                
+     // use custom hook to set component items 
+         function useSpeakerDataManager() {
+           const [{ isLoading, speakerList }, dispatch] = useReducer(speakersReducer, {
+             isLoading: true,
+             speakerList: [],
+           });
+           useEffect(() => {...}, []); // [speakingSunday, speakingSaturday]);
+           return { isLoading, speakerList, dispatch };
+         }
+         export default useSpeakerDataManager;
+
+         // in component
+         const { isLoading, speakerList, dispatch } = useSpeakerDataManager();
+
+    // can replace "dispatch" with exported function, thus hiding dispatch in reducer completely
+         function useSpeakerDataManager() {
+            function toggleSpeakerFavorite(speakerRec) {...}  
+         
+            ...
+           
+            return { isLoading, speakerList, toggleSpeakerFavorite };
+         } 
+         export default useSpeakerDataManager;
+
+         // in component, need to refactor to use speakerRec instead of destructured speakerRec to accomodate toggleSpeakerFavorite
+         const {isLoading, speakerList, toggleSpeakerFavorite} = useSpeakerDataManager();  
+    
+    // REST calls from hooks
+        function useSpeakerDataManager() {
+            ...
+            function toggleSpeakerFavorite(speakerRec) { 
+                const updateData = async function () {
+                  axios.put(`http://localhost:4000/speakers/${speakerRec.id}`, speakerRec);  // preserve favorite in db 
+                  speakerRec.favorite === true
+                    ? dispatch({ type: 'unfavorite', id: speakerRec.id })
+                    : dispatch({ type: 'favorite', id: speakerRec.id });
+                };
+                updateData();
+            }
+  
+            useEffect(() => {
+                const fetchData = async function () {
+                  let result = await axios.get('http://localhost:4000/speakers');  // use axios to get data
+                  dispatch({ type: 'setSpeakerList', data: result.data });
+                };
+                fetchData();
+
+                return () => {console.log('cleanup');};
+            }, []);
+            ...

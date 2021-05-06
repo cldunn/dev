@@ -1,0 +1,123 @@
+1. The request is intercepted by the authentication filter
+2. Authentication  responsibility is delegated to the authentication manager.
+3. The authentication manager users the authentication provider, which implements the authentication logic
+4. The authentication provider finds the user with the user detail service and validates the password using a password encoder
+5. The result of the authentication is returned to the filter
+6. Details about the authentication entity are stored in the security context.
+
+Authentication - represents an authentication request event // eg. UserNamePasswordAuthenticationToken, OpenIdAuthenticationToken
+    principal - user requesting access to application
+    
+    getName()          // principal
+    getCredentials()   // secret password | code | finger print
+    getAuthorities()
+    getDetails()       // details about request
+    isAuthenticated()  // either is authenticated (true) or in process of (false)
+    setAuthenticated()
+    
+AuthenticationProvider // eg. DaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider, OpenIdAuthenticationProvider
+    1. entity making request is not authenticated
+       => application rejects request without delegating back to authorization process, response HTTP 401 Unauthorized returned to client
+    2. entity making request is authenticated
+       => userDetails stored in SecurityContext for use by application to perfom authorization
+
+    Authentication authenticate(Authentication authentication);    // defines authentication logic
+        a. throws AuthenticationException if authentication fails
+        b. if authentication object is not supported, return null  // interface implements by unsupported object
+        c. successful authentication returns Authentication object,
+            - contains authenticated entity details
+            - ussually with sensitive data removed
+            - isAuthenticated() returns true
+        
+    boolean supports(Class<?> authenticationType);
+        is particular Authentication implementation supported
+        Note: not just authentication type checking, possible to provide finer grain grain validation
+        
+    In order to employ a specific/custom authenticationProvider
+        @Configuration
+        public class MySecurityConfig extends WebSecurityConfigurerAdapter {
+            @Autowired
+            private AuthenticationProvider authenticationProvider;  // assumes one @Component implementaion in ApplicationContext
+
+            @Override
+            protected void configure(AuthenticationManagerBuilder authBldr) {
+                authBldr.authenticationProvider(authenticationProvider);
+            }
+        }
+        
+SecurityContext - Once AuthenticationManager completes the authentication process it stores the authentication for the rest of the request
+    getAuthentication()                     // gets the Authentication object
+    setAuthentication(Authentication auth); // sets the Authentication object
+    
+    SecutiryContextHolder
+        getSecurityContext();
+        setSecurityContext(SecurityContext sc);
+        setStrategyName(String strategyName)
+        
+        // only traditional servlet applications,  not for reactive apps
+        MODE_THREADLOCAL - (default) thread per request, each requst has access to authentication  
+            @GetMapping("/hello")
+            public String hello(Authentication a) { ... } // get authentication from security context at endpoint via injection
+            
+        MODE_INHERITABLETHREADLOCAL - each requst has access to authentication as well as any asnchronous methods called with @Async
+            set strategy via spring boot property (spring.security.strategy)
+            
+            @GetMapping("/hello")
+            @Async
+            public String hello(Authentication a) { ... } // new thread inherits authentication
+            
+        MODE_GLOBAL - all thread in application see same authentication
+
+        self-managed threads
+            DelegatingSecurityContextRunnable     // no return value
+            DelegatingSecurityContextCallable<T>  // with return value
+            
+            Callable<String> task = () => { return SecurityContextHolder.getContext..getAuthentication.getName(); }
+            ExecutorService e = Executors.newCachedThreadPool();
+            // e = DelegatingSecurityContextExecutorService(e);
+            try { 
+                var contextTask = new DelegatingSecurityContextCallable<>(task);
+                println(e.submit(contextTask).get()); 
+            } finally { 
+                e.shutdown() 
+            }
+            
+            Alternatives: e = DelegatingSecurityContextExecutorService(e); e = SecurityContextScheduleExecutorService(e);  // replaces contextTask = ...
+            
+can customize 401 response header info
+    public class CustomEntryPoint implements AuthenticationEntryPoint  {
+      @Override commence(HttpServletRequest req, HttpServletResponse resp, AuthenticationException authEx) { 
+        resp.addHeader("a": "b"); 
+        resp.sendError(HttpStatus.UNAUTHORIZED.value());
+        
+    ... extends WebsecurityConfigureAdapter   
+      configure(HttpSecurity http) {
+        http.httpBasic(c -> { c.realmName("OTHER"); c.authenticationEntryPoint(new CustomEntryPoint()); });  // versus just http.Basic()
+        
+    curl -v http://localhost:8080
+        HTTP/1.1 401  
+        a: b
+
+can customize formLogin() - throws up simple login page if user not logged, after login then proceeds to mapped controller, controller returns view in resource/static
+    public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler  {
+      @Override onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) { 
+        if (auth.getAuthorities().contains("read")) { resp.sendRedirect("/home") } else { resp.sendRedirect("/error") }
+
+    public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler  {
+      @Override onAuthenticationFailure(HttpServletRequest req, HttpServletResponse resp, Authentication auth) { ... }
+
+    ... extends WebsecurityConfigureAdapter   
+      configure(HttpSecurity http) {
+        http.formLogin().successHandler(customAuthenticationSuccessHandler).failureHandler(customAuthenticationFailureHandler);
+            .logout()                                   // response to default "/logout" and redirect to "/"
+                .logoutUrl("/perform_logout")           // change logout url
+                .logoutSuccessUrl("/afterlogout.html")  // change the logout redirect destination
+        
+can support both Basic and formLogin
+    ... extends WebsecurityConfigureAdapter   
+      configure(HttpSecurity http) {
+        http.formLogin()
+            .successHandler(customAuthenticationSuccessHandler)
+            .failureHandler(customAuthenticationFailureHandler)
+        .and()
+            http.httpBasic()

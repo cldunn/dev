@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<dbo.ROLE ID="1" VERSION="1" NAME="ADMIN" DESCRIPTION="Administrator" CREATED_DATE="2016-04-14 17:15:12.450" CREATED_BY="sys" />
+	<dbo.ROLE ID="2" VERSION="1" NAME="CUSTOMER" DESCRIPTION="Customer" CREATED_DATE="2016-04-14 17:15:12.450" CREATED_BY="sys" />
+</dataset>

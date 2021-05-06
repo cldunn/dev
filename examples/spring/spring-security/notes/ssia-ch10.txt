@@ -1,0 +1,73 @@
+CSRF - while logged into an application, you navigate to a malicious website that executes code against your application on you behalf.
+=> desire is to assure only the frontend of the application can perform mutating operations (POST, PUT, DELETE, ...)
+=> FIX: upon initially navigating to the 1st page, generate a token that is sent to the client that is sent in the header of future request 
+   verifing future request are sent from application pages
+  
+Spring: CsrfFilter - if mutating requests do not contain header token (X-CSRF_TOKEN), request rejected
+    Filter uses CsrfTokenRepoistory to manage tokens, by default csrf token stored in session
+    Adds _csrf request attribute with token object (token.getToken(): string)
+    NOTE: responsibilty of application to return token in response
+          eg. in jsp thru form <input name="_csrf type="hidden" value="..."/>
+
+http.formLogin() // automatically generates html page utilizing <input name="_csrf type="hidden" value="..."/>
+NOTE: this is most appropriate where UI and server side are served as one application (not angular/reactjs/vue UI on nodejs server)
+NOTE: For separate angular/reactjs/vue UI on nodejs prefer oauth2/jwt tokens // http.csrf.disable()
+
+Can selctively suspend applying csrf
+    MvcRequestMatcher rm = new MvcRequestMatcher(new HandlerMappingInterceptor(), "/ciao");
+    c.ignoringRequestMatchers(rm);  // can also work for RegexRequestMatchers()
+    
+Can change csrf token from being stored in session to store it in DB
+    CSRFToken - describe token (name of header (default X-CSRF_TOKEN), name of request attribute (default _csrf), token value)
+        new DefaultCsrfToken("X-CSRF_TOKEN", "_csrf", UUID.randomUID().toString());
+    CsrfTokenRepository - CRUD token interface (generateToken(), saveToken(), loadToken())
+    
+    @Configuration
+    public SecurityConfig extends WebSecurityConfigurerAdapter {
+        @Bean
+        public CsrfTokenRepository customTokenRepository() { ... }
+        
+        @Override
+        protected configure(HttpSecurity http) {
+            http.csrf(c -> { c.csrfTokenRepository(customTokenRepsoitory())});
+        }
+    
+    }
+    
+CORS - browser won't make requests to domain other than from where page came (includes iframe)
+    => CORS allows you to specify domains to which you can make such requests by using http headers
+    
+    Http Headers
+        Access-Control-Allow-Origin - specify foreign domains that can access resources on your domain
+        Access-control-Allow-Method - limit http methods allowed to be used for different domains
+        Access-Control-Allow-Headers - restrict whcih headers you can use in specific requests
+    
+    Sans headers, call may/may not be called (depends if there is a pre-flight test call first), but browser will not server result
+    
+    eg. example.com cannot make requests to example.org, must use headers
+        => Access-Control-Allow-Origin: example.com, example.org
+
+    @CrossOrigin
+        can annotate the controller with @CrossOrigin("http://example.com") on endpoint in example.org
+        => @CrossOrigin receives an array of origins; @CrossOrigin({"http://example.com", "http://example.org"})
+           annotation also has allowedHeaders and methods attributes, can also use * to represent all headers/origin
+           
+    CorsConfigurer
+    @Configuration
+    public SecurityCOnfig extends WebSecurityConfigurerAdapter {
+        
+        @Override
+        protected configure(HttpSecurity http) {
+            http.cors(c -> { 
+                // can separate CorsConfigurationSource out to another class if it become complex
+                CorsConfigurationSource source = request -> {
+                    CorsConfiguration cfg = new CorsConfiguration();
+                    cfg.setAllowedOrigins(List.of("http://example.com", "http://example.org"));
+                    cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                    return dfg;
+                }
+                c.configurationSource(source);
+            });
+        }
+    
+    }

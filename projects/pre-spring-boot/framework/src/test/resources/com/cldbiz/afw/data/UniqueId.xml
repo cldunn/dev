@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<dbo.UNIQUE_ID ID_NAME="EMPLOYEE" NEXT_ID="1001" />
+	<dbo.UNIQUE_ID ID_NAME="USER_INFO" NEXT_ID="1001" />
+	<dbo.UNIQUE_ID ID_NAME="USER_AUTHENTICATION" NEXT_ID="1001" />
+	<dbo.UNIQUE_ID ID_NAME="ROLE" NEXT_ID="1001" />
+	<dbo.UNIQUE_ID ID_NAME="RESOURCE" NEXT_ID="1001" />
+</dataset>

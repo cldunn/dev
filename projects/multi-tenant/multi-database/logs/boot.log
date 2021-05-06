@@ -1,0 +1,462 @@
+2017-05-18 21:46:51,502 [main] DEBUG org.springframework.core.io.support.PropertiesLoaderSupport loadProperties 173 - Loading properties file from class path resource [configuration.properties]
+2017-05-18 21:46:51,828 [main] DEBUG org.hibernate.jpa.HibernatePersistenceProvider <clinit> 38 - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+2017-05-18 21:46:52,049 [main] INFO  org.hibernate.jpa.internal.util.LogHelper logPersistenceUnitInformation 31 - HHH000204: Processing PersistenceUnitInfo [
+	name: boot
+	...]
+2017-05-18 21:46:52,255 [main] INFO  org.hibernate.Version logVersion 37 - HHH000412: Hibernate Core {5.0.12.Final}
+2017-05-18 21:46:52,260 [main] INFO  org.hibernate.cfg.Environment <clinit> 213 - HHH000206: hibernate.properties not found
+2017-05-18 21:46:52,281 [main] INFO  org.hibernate.cfg.Environment buildBytecodeProvider 317 - HHH000021: Bytecode provider name : javassist
+2017-05-18 21:46:52,426 [main] INFO  org.hibernate.annotations.common.reflection.java.JavaReflectionManager <clinit> 66 - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+2017-05-18 21:46:52,740 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration boolean -> org.hibernate.type.BooleanType@62435e70
+2017-05-18 21:46:52,741 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration boolean -> org.hibernate.type.BooleanType@62435e70
+2017-05-18 21:46:52,741 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@62435e70
+2017-05-18 21:46:52,745 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@3234f74e
+2017-05-18 21:46:52,749 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration true_false -> org.hibernate.type.TrueFalseType@366ef90e
+2017-05-18 21:46:52,750 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration yes_no -> org.hibernate.type.YesNoType@a5b0b86
+2017-05-18 21:46:52,754 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration byte -> org.hibernate.type.ByteType@2611b9a3
+2017-05-18 21:46:52,754 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration byte -> org.hibernate.type.ByteType@2611b9a3
+2017-05-18 21:46:52,755 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@2611b9a3
+2017-05-18 21:46:52,759 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration character -> org.hibernate.type.CharacterType@72445aba
+2017-05-18 21:46:52,759 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration char -> org.hibernate.type.CharacterType@72445aba
+2017-05-18 21:46:52,760 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@72445aba
+2017-05-18 21:46:52,766 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration short -> org.hibernate.type.ShortType@56276db8
+2017-05-18 21:46:52,767 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration short -> org.hibernate.type.ShortType@56276db8
+2017-05-18 21:46:52,768 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Short -> org.hibernate.type.ShortType@56276db8
+2017-05-18 21:46:52,770 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration integer -> org.hibernate.type.IntegerType@4d098f9b
+2017-05-18 21:46:52,770 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration int -> org.hibernate.type.IntegerType@4d098f9b
+2017-05-18 21:46:52,771 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@4d098f9b
+2017-05-18 21:46:52,773 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration long -> org.hibernate.type.LongType@7b64240d
+2017-05-18 21:46:52,773 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration long -> org.hibernate.type.LongType@7b64240d
+2017-05-18 21:46:52,774 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Long -> org.hibernate.type.LongType@7b64240d
+2017-05-18 21:46:52,776 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration float -> org.hibernate.type.FloatType@773f7880
+2017-05-18 21:46:52,778 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration float -> org.hibernate.type.FloatType@773f7880
+2017-05-18 21:46:52,779 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Float -> org.hibernate.type.FloatType@773f7880
+2017-05-18 21:46:52,784 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration double -> org.hibernate.type.DoubleType@773cbf4f
+2017-05-18 21:46:52,785 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration double -> org.hibernate.type.DoubleType@773cbf4f
+2017-05-18 21:46:52,785 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@773cbf4f
+2017-05-18 21:46:52,789 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@165b2f7f
+2017-05-18 21:46:52,789 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@165b2f7f
+2017-05-18 21:46:52,791 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration big_integer -> org.hibernate.type.BigIntegerType@470a696f
+2017-05-18 21:46:52,792 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@470a696f
+2017-05-18 21:46:52,793 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration string -> org.hibernate.type.StringType@1c55f277
+2017-05-18 21:46:52,794 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.String -> org.hibernate.type.StringType@1c55f277
+2017-05-18 21:46:52,796 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration nstring -> org.hibernate.type.StringNVarcharType@58e6d4b8
+2017-05-18 21:46:52,798 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@5ef0d29e
+2017-05-18 21:46:52,799 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration url -> org.hibernate.type.UrlType@77602954
+2017-05-18 21:46:52,800 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.net.URL -> org.hibernate.type.UrlType@77602954
+2017-05-18 21:46:52,803 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration date -> org.hibernate.type.DateType@6731787b
+2017-05-18 21:46:52,803 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Date -> org.hibernate.type.DateType@6731787b
+2017-05-18 21:46:52,805 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration time -> org.hibernate.type.TimeType@4ba534b0
+2017-05-18 21:46:52,806 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Time -> org.hibernate.type.TimeType@4ba534b0
+2017-05-18 21:46:52,810 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration timestamp -> org.hibernate.type.TimestampType@5860f3d7
+2017-05-18 21:46:52,811 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@5860f3d7
+2017-05-18 21:46:52,812 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Date -> org.hibernate.type.TimestampType@5860f3d7
+2017-05-18 21:46:52,815 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@1ddae9b5
+2017-05-18 21:46:52,818 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration calendar -> org.hibernate.type.CalendarType@2c7d121c
+2017-05-18 21:46:52,818 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@2c7d121c
+2017-05-18 21:46:52,819 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@2c7d121c
+2017-05-18 21:46:52,821 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@419a20a6
+2017-05-18 21:46:52,823 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration locale -> org.hibernate.type.LocaleType@1ce61929
+2017-05-18 21:46:52,823 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@1ce61929
+2017-05-18 21:46:52,825 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration currency -> org.hibernate.type.CurrencyType@9bd0fa6
+2017-05-18 21:46:52,825 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@9bd0fa6
+2017-05-18 21:46:52,826 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration timezone -> org.hibernate.type.TimeZoneType@46f699d5
+2017-05-18 21:46:52,827 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@46f699d5
+2017-05-18 21:46:52,829 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration class -> org.hibernate.type.ClassType@10650953
+2017-05-18 21:46:52,829 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Class -> org.hibernate.type.ClassType@10650953
+2017-05-18 21:46:52,832 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@f74e835
+2017-05-18 21:46:52,832 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@f74e835
+2017-05-18 21:46:52,833 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@31e3250d
+2017-05-18 21:46:52,835 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration binary -> org.hibernate.type.BinaryType@18245eb0
+2017-05-18 21:46:52,836 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration byte[] -> org.hibernate.type.BinaryType@18245eb0
+2017-05-18 21:46:52,836 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [B -> org.hibernate.type.BinaryType@18245eb0
+2017-05-18 21:46:52,838 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@6722db6e
+2017-05-18 21:46:52,838 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@6722db6e
+2017-05-18 21:46:52,838 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@6722db6e
+2017-05-18 21:46:52,840 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration row_version -> org.hibernate.type.RowVersionType@3a94964
+2017-05-18 21:46:52,846 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration image -> org.hibernate.type.ImageType@34a75079
+2017-05-18 21:46:52,848 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration characters -> org.hibernate.type.CharArrayType@2e029d61
+2017-05-18 21:46:52,848 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration char[] -> org.hibernate.type.CharArrayType@2e029d61
+2017-05-18 21:46:52,849 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [C -> org.hibernate.type.CharArrayType@2e029d61
+2017-05-18 21:46:52,851 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@acb0951
+2017-05-18 21:46:52,851 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@acb0951
+2017-05-18 21:46:52,852 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@acb0951
+2017-05-18 21:46:52,853 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration text -> org.hibernate.type.TextType@62e70ea3
+2017-05-18 21:46:52,857 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration ntext -> org.hibernate.type.NTextType@63648ee9
+2017-05-18 21:46:52,873 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration blob -> org.hibernate.type.BlobType@7e985ce9
+2017-05-18 21:46:52,873 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@7e985ce9
+2017-05-18 21:46:52,874 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@319988b0
+2017-05-18 21:46:52,883 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration clob -> org.hibernate.type.ClobType@52b56a3e
+2017-05-18 21:46:52,884 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@52b56a3e
+2017-05-18 21:46:52,890 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration nclob -> org.hibernate.type.NClobType@1a1da881
+2017-05-18 21:46:52,891 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@1a1da881
+2017-05-18 21:46:52,893 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@165b8a71
+2017-05-18 21:46:52,894 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@756cf158
+2017-05-18 21:46:52,897 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration serializable -> org.hibernate.type.SerializableType@2cf92cc7
+2017-05-18 21:46:52,904 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration object -> org.hibernate.type.ObjectType@2a65bb85
+2017-05-18 21:46:52,904 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@2a65bb85
+2017-05-18 21:46:52,905 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@4215838f
+2017-05-18 21:46:52,906 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@452ba1db
+2017-05-18 21:46:52,946 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@2289aca5
+2017-05-18 21:46:52,947 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@76a36b71
+2017-05-18 21:46:52,948 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@184497d1
+2017-05-18 21:46:52,949 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@f9d87b
+2017-05-18 21:46:52,950 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@6ffab045
+2017-05-18 21:46:52,950 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@26fb628
+2017-05-18 21:46:53,448 [main] INFO  org.hibernate.dialect.Dialect <init> 156 - HHH000400: Using dialect: org.hibernate.dialect.SQLServer2012Dialect
+2017-05-18 21:46:54,785 [main] TRACE org.hibernate.type.TypeFactory$TypeScopeImpl injectSessionFactory 60 - Scoping types to session factory org.hibernate.internal.SessionFactoryImpl@201aa8c1
+2017-05-18 21:46:54,879 [main] INFO  org.hibernate.validator.internal.util.Version <clinit> 30 - HV000001: Hibernate Validator 5.3.4.Final
+2017-05-18 21:46:56,782 [main] DEBUG com.querydsl.jpa.impl.AbstractJPAQuery logQuery 233 - select userInfo from UserInfo userInfo where userInfo.id = ?1
+2017-05-18 21:46:56,810 [main] INFO  org.hibernate.hql.internal.QueryTranslatorFactoryInitiator initiateService 47 - HHH000397: Using ASTQueryTranslatorFactory
+2017-05-18 21:46:57,210 [main] DEBUG org.hibernate.engine.jdbc.spi.SqlStatementLogger logStatement 92 - 
+    select
+        userinfo0_.ID as ID1_5_,
+        userinfo0_.CREATED_BY as CREATED_2_5_,
+        userinfo0_.CREATED_DATE as CREATED_3_5_,
+        userinfo0_.MODIFIED_BY as MODIFIED4_5_,
+        userinfo0_.MODIFIED_DATE as MODIFIED5_5_,
+        userinfo0_.VERSION as VERSION6_5_,
+        userinfo0_.ADDRESS_LINE1 as ADDRESS_7_5_,
+        userinfo0_.ADDRESS_LINE2 as ADDRESS_8_5_,
+        userinfo0_.CITY as CITY9_5_,
+        userinfo0_.COUNTRY as COUNTRY10_5_,
+        userinfo0_.DATE_FORMAT as DATE_FO11_5_,
+        userinfo0_.EMAIL_ADDRESS as EMAIL_A12_5_,
+        userinfo0_.FAX as FAX13_5_,
+        userinfo0_.FIRST_NAME as FIRST_N14_5_,
+        userinfo0_.IS_LOCKED as IS_LOCK15_5_,
+        userinfo0_.LAST_LOGIN_DATE as LAST_LO16_5_,
+        userinfo0_.LAST_NAME as LAST_NA17_5_,
+        userinfo0_.LOCALE_COUNTRY as LOCALE_18_5_,
+        userinfo0_.LOCALE_LANGUAGE as LOCALE_19_5_,
+        userinfo0_.LOCALE_VARIANT as LOCALE_20_5_,
+        userinfo0_.LOGIN as LOGIN21_5_,
+        userinfo0_.LOGIN_ATTEMPTS as LOGIN_A22_5_,
+        userinfo0_.PASSWORD as PASSWOR23_5_,
+        userinfo0_.PASSWORD_EXPIRE_DATE as PASSWOR24_5_,
+        userinfo0_.PASSWORD_MODIFIED_DATE as PASSWOR25_5_,
+        userinfo0_.PRIMARY_PHONE as PRIMARY26_5_,
+        userinfo0_.PROVINCE as PROVINC27_5_,
+        userinfo0_.SECONDARY_PHONE as SECONDA28_5_,
+        userinfo0_.STATE as STATE29_5_,
+        userinfo0_.STATUS as STATUS30_5_,
+        userinfo0_.TIME_FORMAT as TIME_FO31_5_,
+        userinfo0_.TIME_ZONE as TIME_ZO32_5_,
+        userinfo0_.ZIP as ZIP33_5_ 
+    from
+        USER_INFO userinfo0_ 
+    where
+        userinfo0_.ID=?
+2017-05-18 21:46:57,230 [main] TRACE org.hibernate.type.descriptor.sql.BasicBinder bind 65 - binding parameter [1] as [BIGINT] - [1]
+2017-05-18 21:46:57,306 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ID1_5_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,325 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_2_5_] : [VARCHAR]) - [sys]
+2017-05-18 21:46:57,329 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_3_5_] : [TIMESTAMP]) - [2016-04-12 17:15:12.45]
+2017-05-18 21:46:57,330 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED4_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,331 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED5_5_] : [TIMESTAMP]) - [null]
+2017-05-18 21:46:57,332 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([VERSION6_5_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,332 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([ADDRESS_7_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,332 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([ADDRESS_8_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,333 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([CITY9_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,333 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([COUNTRY10_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,334 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([DATE_FO11_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,334 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([EMAIL_A12_5_] : [VARCHAR]) - [cliffdunntx@yahoo.com]
+2017-05-18 21:46:57,335 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([FAX13_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,335 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([FIRST_N14_5_] : [VARCHAR]) - [Cliff]
+2017-05-18 21:46:57,336 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([IS_LOCK15_5_] : [BOOLEAN]) - [null]
+2017-05-18 21:46:57,337 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([LAST_LO16_5_] : [TIMESTAMP]) - [null]
+2017-05-18 21:46:57,337 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LAST_NA17_5_] : [VARCHAR]) - [Dunn]
+2017-05-18 21:46:57,338 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LOCALE_18_5_] : [VARCHAR]) - [US]
+2017-05-18 21:46:57,338 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LOCALE_19_5_] : [VARCHAR]) - [en]
+2017-05-18 21:46:57,338 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([LOCALE_20_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,339 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LOGIN21_5_] : [VARCHAR]) - [cldunn]
+2017-05-18 21:46:57,340 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([LOGIN_A22_5_] : [INTEGER]) - [null]
+2017-05-18 21:46:57,341 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([PASSWOR23_5_] : [VARCHAR]) - [asdfasdf1!]
+2017-05-18 21:46:57,342 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PASSWOR24_5_] : [DATE]) - [null]
+2017-05-18 21:46:57,342 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PASSWOR25_5_] : [TIMESTAMP]) - [null]
+2017-05-18 21:46:57,343 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PRIMARY26_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,350 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PROVINC27_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,351 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([SECONDA28_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,352 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([STATE29_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,353 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([STATUS30_5_] : [VARCHAR]) - [ACTIVE]
+2017-05-18 21:46:57,354 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([TIME_FO31_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,354 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([TIME_ZO32_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,355 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([ZIP33_5_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,412 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.UserInfo.roles#1]
+2017-05-18 21:46:57,444 [main] DEBUG org.hibernate.engine.jdbc.spi.SqlStatementLogger logStatement 92 - 
+    select
+        roles0_.USER_INFO_ID as USER_INF1_6_0_,
+        roles0_.ROLE_ID as ROLE_ID2_6_0_,
+        role1_.ID as ID1_2_1_,
+        role1_.CREATED_BY as CREATED_2_2_1_,
+        role1_.CREATED_DATE as CREATED_3_2_1_,
+        role1_.MODIFIED_BY as MODIFIED4_2_1_,
+        role1_.MODIFIED_DATE as MODIFIED5_2_1_,
+        role1_.VERSION as VERSION6_2_1_,
+        role1_.DESCRIPTION as DESCRIPT7_2_1_,
+        role1_.NAME as NAME8_2_1_,
+        role1_.PRODUCT_ID as PRODUCT_9_2_1_ 
+    from
+        USER_INFO_ROLE roles0_ 
+    inner join
+        ROLE role1_ 
+            on roles0_.ROLE_ID=role1_.ID 
+    where
+        roles0_.USER_INFO_ID=?
+2017-05-18 21:46:57,445 [main] TRACE org.hibernate.type.descriptor.sql.BasicBinder bind 65 - binding parameter [1] as [BIGINT] - [1]
+2017-05-18 21:46:57,526 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ID1_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,527 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_2_2_1_] : [VARCHAR]) - [sys]
+2017-05-18 21:46:57,528 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_3_2_1_] : [TIMESTAMP]) - [2016-04-12 17:15:12.45]
+2017-05-18 21:46:57,528 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED4_2_1_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,529 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED5_2_1_] : [TIMESTAMP]) - [null]
+2017-05-18 21:46:57,529 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([VERSION6_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,530 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([DESCRIPT7_2_1_] : [VARCHAR]) - [Administrator]
+2017-05-18 21:46:57,530 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([NAME8_2_1_] : [VARCHAR]) - [ADMIN]
+2017-05-18 21:46:57,531 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([PRODUCT_9_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,533 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([USER_INF1_6_0_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,535 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ROLE_ID2_6_0_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,539 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ID1_2_1_] : [BIGINT]) - [2]
+2017-05-18 21:46:57,540 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_2_2_1_] : [VARCHAR]) - [sys]
+2017-05-18 21:46:57,540 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_3_2_1_] : [TIMESTAMP]) - [2016-04-12 17:15:12.45]
+2017-05-18 21:46:57,541 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED4_2_1_] : [VARCHAR]) - [null]
+2017-05-18 21:46:57,541 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED5_2_1_] : [TIMESTAMP]) - [null]
+2017-05-18 21:46:57,542 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([VERSION6_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,542 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([DESCRIPT7_2_1_] : [VARCHAR]) - [Customer]
+2017-05-18 21:46:57,543 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([NAME8_2_1_] : [VARCHAR]) - [CUSTOMER]
+2017-05-18 21:46:57,543 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([PRODUCT_9_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,544 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([USER_INF1_6_0_] : [BIGINT]) - [1]
+2017-05-18 21:46:57,545 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ROLE_ID2_6_0_] : [BIGINT]) - [2]
+2017-05-18 21:46:57,575 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.roleAssets#1]
+2017-05-18 21:46:57,576 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.userInfos#1]
+2017-05-18 21:46:57,576 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.roleAssets#2]
+2017-05-18 21:46:57,577 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.userInfos#2]
+2017-05-18 21:49:37,939 [main] DEBUG org.springframework.core.io.support.PropertiesLoaderSupport loadProperties 173 - Loading properties file from class path resource [configuration.properties]
+2017-05-18 21:49:38,303 [main] DEBUG org.hibernate.jpa.HibernatePersistenceProvider <clinit> 38 - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+2017-05-18 21:49:38,538 [main] INFO  org.hibernate.jpa.internal.util.LogHelper logPersistenceUnitInformation 31 - HHH000204: Processing PersistenceUnitInfo [
+	name: boot
+	...]
+2017-05-18 21:49:38,721 [main] INFO  org.hibernate.Version logVersion 37 - HHH000412: Hibernate Core {5.0.12.Final}
+2017-05-18 21:49:38,728 [main] INFO  org.hibernate.cfg.Environment <clinit> 213 - HHH000206: hibernate.properties not found
+2017-05-18 21:49:38,732 [main] INFO  org.hibernate.cfg.Environment buildBytecodeProvider 317 - HHH000021: Bytecode provider name : javassist
+2017-05-18 21:49:38,858 [main] INFO  org.hibernate.annotations.common.reflection.java.JavaReflectionManager <clinit> 66 - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+2017-05-18 21:49:39,195 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration boolean -> org.hibernate.type.BooleanType@62435e70
+2017-05-18 21:49:39,196 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration boolean -> org.hibernate.type.BooleanType@62435e70
+2017-05-18 21:49:39,196 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@62435e70
+2017-05-18 21:49:39,198 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@3234f74e
+2017-05-18 21:49:39,201 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration true_false -> org.hibernate.type.TrueFalseType@366ef90e
+2017-05-18 21:49:39,203 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration yes_no -> org.hibernate.type.YesNoType@a5b0b86
+2017-05-18 21:49:39,207 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration byte -> org.hibernate.type.ByteType@2611b9a3
+2017-05-18 21:49:39,208 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration byte -> org.hibernate.type.ByteType@2611b9a3
+2017-05-18 21:49:39,208 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@2611b9a3
+2017-05-18 21:49:39,213 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration character -> org.hibernate.type.CharacterType@72445aba
+2017-05-18 21:49:39,214 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration char -> org.hibernate.type.CharacterType@72445aba
+2017-05-18 21:49:39,215 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@72445aba
+2017-05-18 21:49:39,218 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration short -> org.hibernate.type.ShortType@56276db8
+2017-05-18 21:49:39,218 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration short -> org.hibernate.type.ShortType@56276db8
+2017-05-18 21:49:39,219 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Short -> org.hibernate.type.ShortType@56276db8
+2017-05-18 21:49:39,221 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration integer -> org.hibernate.type.IntegerType@4d098f9b
+2017-05-18 21:49:39,221 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration int -> org.hibernate.type.IntegerType@4d098f9b
+2017-05-18 21:49:39,222 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@4d098f9b
+2017-05-18 21:49:39,225 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration long -> org.hibernate.type.LongType@7b64240d
+2017-05-18 21:49:39,225 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration long -> org.hibernate.type.LongType@7b64240d
+2017-05-18 21:49:39,226 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Long -> org.hibernate.type.LongType@7b64240d
+2017-05-18 21:49:39,229 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration float -> org.hibernate.type.FloatType@773f7880
+2017-05-18 21:49:39,230 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration float -> org.hibernate.type.FloatType@773f7880
+2017-05-18 21:49:39,230 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Float -> org.hibernate.type.FloatType@773f7880
+2017-05-18 21:49:39,232 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration double -> org.hibernate.type.DoubleType@773cbf4f
+2017-05-18 21:49:39,233 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration double -> org.hibernate.type.DoubleType@773cbf4f
+2017-05-18 21:49:39,233 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@773cbf4f
+2017-05-18 21:49:39,237 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@165b2f7f
+2017-05-18 21:49:39,238 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@165b2f7f
+2017-05-18 21:49:39,240 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration big_integer -> org.hibernate.type.BigIntegerType@470a696f
+2017-05-18 21:49:39,241 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@470a696f
+2017-05-18 21:49:39,243 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration string -> org.hibernate.type.StringType@1c55f277
+2017-05-18 21:49:39,243 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.String -> org.hibernate.type.StringType@1c55f277
+2017-05-18 21:49:39,246 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration nstring -> org.hibernate.type.StringNVarcharType@58e6d4b8
+2017-05-18 21:49:39,248 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@5ef0d29e
+2017-05-18 21:49:39,252 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration url -> org.hibernate.type.UrlType@77602954
+2017-05-18 21:49:39,253 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.net.URL -> org.hibernate.type.UrlType@77602954
+2017-05-18 21:49:39,258 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration date -> org.hibernate.type.DateType@6731787b
+2017-05-18 21:49:39,258 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Date -> org.hibernate.type.DateType@6731787b
+2017-05-18 21:49:39,260 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration time -> org.hibernate.type.TimeType@4ba534b0
+2017-05-18 21:49:39,262 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Time -> org.hibernate.type.TimeType@4ba534b0
+2017-05-18 21:49:39,264 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration timestamp -> org.hibernate.type.TimestampType@5860f3d7
+2017-05-18 21:49:39,269 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@5860f3d7
+2017-05-18 21:49:39,270 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Date -> org.hibernate.type.TimestampType@5860f3d7
+2017-05-18 21:49:39,273 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@1ddae9b5
+2017-05-18 21:49:39,275 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration calendar -> org.hibernate.type.CalendarType@2c7d121c
+2017-05-18 21:49:39,276 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@2c7d121c
+2017-05-18 21:49:39,276 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@2c7d121c
+2017-05-18 21:49:39,279 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@419a20a6
+2017-05-18 21:49:39,282 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration locale -> org.hibernate.type.LocaleType@1ce61929
+2017-05-18 21:49:39,282 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@1ce61929
+2017-05-18 21:49:39,285 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration currency -> org.hibernate.type.CurrencyType@9bd0fa6
+2017-05-18 21:49:39,285 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@9bd0fa6
+2017-05-18 21:49:39,287 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration timezone -> org.hibernate.type.TimeZoneType@46f699d5
+2017-05-18 21:49:39,288 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@46f699d5
+2017-05-18 21:49:39,291 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration class -> org.hibernate.type.ClassType@10650953
+2017-05-18 21:49:39,291 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Class -> org.hibernate.type.ClassType@10650953
+2017-05-18 21:49:39,296 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@f74e835
+2017-05-18 21:49:39,297 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@f74e835
+2017-05-18 21:49:39,298 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@31e3250d
+2017-05-18 21:49:39,301 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration binary -> org.hibernate.type.BinaryType@18245eb0
+2017-05-18 21:49:39,301 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration byte[] -> org.hibernate.type.BinaryType@18245eb0
+2017-05-18 21:49:39,302 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [B -> org.hibernate.type.BinaryType@18245eb0
+2017-05-18 21:49:39,304 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@6722db6e
+2017-05-18 21:49:39,305 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@6722db6e
+2017-05-18 21:49:39,305 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@6722db6e
+2017-05-18 21:49:39,310 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration row_version -> org.hibernate.type.RowVersionType@3a94964
+2017-05-18 21:49:39,317 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration image -> org.hibernate.type.ImageType@34a75079
+2017-05-18 21:49:39,320 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration characters -> org.hibernate.type.CharArrayType@2e029d61
+2017-05-18 21:49:39,320 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration char[] -> org.hibernate.type.CharArrayType@2e029d61
+2017-05-18 21:49:39,321 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [C -> org.hibernate.type.CharArrayType@2e029d61
+2017-05-18 21:49:39,324 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@acb0951
+2017-05-18 21:49:39,324 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@acb0951
+2017-05-18 21:49:39,325 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@acb0951
+2017-05-18 21:49:39,326 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration text -> org.hibernate.type.TextType@62e70ea3
+2017-05-18 21:49:39,331 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration ntext -> org.hibernate.type.NTextType@63648ee9
+2017-05-18 21:49:39,339 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration blob -> org.hibernate.type.BlobType@7e985ce9
+2017-05-18 21:49:39,339 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@7e985ce9
+2017-05-18 21:49:39,340 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@319988b0
+2017-05-18 21:49:39,350 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration clob -> org.hibernate.type.ClobType@52b56a3e
+2017-05-18 21:49:39,351 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@52b56a3e
+2017-05-18 21:49:39,360 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration nclob -> org.hibernate.type.NClobType@1a1da881
+2017-05-18 21:49:39,361 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@1a1da881
+2017-05-18 21:49:39,365 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@165b8a71
+2017-05-18 21:49:39,366 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@756cf158
+2017-05-18 21:49:39,368 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration serializable -> org.hibernate.type.SerializableType@2cf92cc7
+2017-05-18 21:49:39,372 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration object -> org.hibernate.type.ObjectType@2a65bb85
+2017-05-18 21:49:39,372 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@2a65bb85
+2017-05-18 21:49:39,373 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@4215838f
+2017-05-18 21:49:39,374 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@452ba1db
+2017-05-18 21:49:39,374 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@2289aca5
+2017-05-18 21:49:39,375 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@76a36b71
+2017-05-18 21:49:39,375 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@184497d1
+2017-05-18 21:49:39,375 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@f9d87b
+2017-05-18 21:49:39,376 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@6ffab045
+2017-05-18 21:49:39,376 [main] DEBUG org.hibernate.type.BasicTypeRegistry register 136 - Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@26fb628
+2017-05-18 21:49:39,537 [main] INFO  org.hibernate.dialect.Dialect <init> 156 - HHH000400: Using dialect: org.hibernate.dialect.SQLServer2012Dialect
+2017-05-18 21:49:40,783 [main] TRACE org.hibernate.type.TypeFactory$TypeScopeImpl injectSessionFactory 60 - Scoping types to session factory org.hibernate.internal.SessionFactoryImpl@201aa8c1
+2017-05-18 21:49:40,867 [main] INFO  org.hibernate.validator.internal.util.Version <clinit> 30 - HV000001: Hibernate Validator 5.3.4.Final
+2017-05-18 21:49:42,930 [main] DEBUG com.querydsl.jpa.impl.AbstractJPAQuery logQuery 233 - select userInfo from UserInfo userInfo where userInfo.id = ?1
+2017-05-18 21:49:42,959 [main] INFO  org.hibernate.hql.internal.QueryTranslatorFactoryInitiator initiateService 47 - HHH000397: Using ASTQueryTranslatorFactory
+2017-05-18 21:49:43,314 [main] DEBUG org.hibernate.engine.jdbc.spi.SqlStatementLogger logStatement 92 - 
+    select
+        userinfo0_.ID as ID1_5_,
+        userinfo0_.CREATED_BY as CREATED_2_5_,
+        userinfo0_.CREATED_DATE as CREATED_3_5_,
+        userinfo0_.MODIFIED_BY as MODIFIED4_5_,
+        userinfo0_.MODIFIED_DATE as MODIFIED5_5_,
+        userinfo0_.VERSION as VERSION6_5_,
+        userinfo0_.ADDRESS_LINE1 as ADDRESS_7_5_,
+        userinfo0_.ADDRESS_LINE2 as ADDRESS_8_5_,
+        userinfo0_.CITY as CITY9_5_,
+        userinfo0_.COUNTRY as COUNTRY10_5_,
+        userinfo0_.DATE_FORMAT as DATE_FO11_5_,
+        userinfo0_.EMAIL_ADDRESS as EMAIL_A12_5_,
+        userinfo0_.FAX as FAX13_5_,
+        userinfo0_.FIRST_NAME as FIRST_N14_5_,
+        userinfo0_.IS_LOCKED as IS_LOCK15_5_,
+        userinfo0_.LAST_LOGIN_DATE as LAST_LO16_5_,
+        userinfo0_.LAST_NAME as LAST_NA17_5_,
+        userinfo0_.LOCALE_COUNTRY as LOCALE_18_5_,
+        userinfo0_.LOCALE_LANGUAGE as LOCALE_19_5_,
+        userinfo0_.LOCALE_VARIANT as LOCALE_20_5_,
+        userinfo0_.LOGIN as LOGIN21_5_,
+        userinfo0_.LOGIN_ATTEMPTS as LOGIN_A22_5_,
+        userinfo0_.PASSWORD as PASSWOR23_5_,
+        userinfo0_.PASSWORD_EXPIRE_DATE as PASSWOR24_5_,
+        userinfo0_.PASSWORD_MODIFIED_DATE as PASSWOR25_5_,
+        userinfo0_.PRIMARY_PHONE as PRIMARY26_5_,
+        userinfo0_.PROVINCE as PROVINC27_5_,
+        userinfo0_.SECONDARY_PHONE as SECONDA28_5_,
+        userinfo0_.STATE as STATE29_5_,
+        userinfo0_.STATUS as STATUS30_5_,
+        userinfo0_.TIME_FORMAT as TIME_FO31_5_,
+        userinfo0_.TIME_ZONE as TIME_ZO32_5_,
+        userinfo0_.ZIP as ZIP33_5_ 
+    from
+        USER_INFO userinfo0_ 
+    where
+        userinfo0_.ID=?
+2017-05-18 21:49:43,346 [main] TRACE org.hibernate.type.descriptor.sql.BasicBinder bind 65 - binding parameter [1] as [BIGINT] - [1]
+2017-05-18 21:49:43,393 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ID1_5_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,408 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_2_5_] : [VARCHAR]) - [sys]
+2017-05-18 21:49:43,412 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_3_5_] : [TIMESTAMP]) - [2016-04-12 17:15:12.45]
+2017-05-18 21:49:43,413 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED4_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,413 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED5_5_] : [TIMESTAMP]) - [null]
+2017-05-18 21:49:43,414 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([VERSION6_5_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,415 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([ADDRESS_7_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,416 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([ADDRESS_8_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,416 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([CITY9_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,417 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([COUNTRY10_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,418 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([DATE_FO11_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,418 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([EMAIL_A12_5_] : [VARCHAR]) - [cliffdunntx@yahoo.com]
+2017-05-18 21:49:43,419 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([FAX13_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,419 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([FIRST_N14_5_] : [VARCHAR]) - [Cliff]
+2017-05-18 21:49:43,420 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([IS_LOCK15_5_] : [BOOLEAN]) - [null]
+2017-05-18 21:49:43,421 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([LAST_LO16_5_] : [TIMESTAMP]) - [null]
+2017-05-18 21:49:43,422 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LAST_NA17_5_] : [VARCHAR]) - [Dunn]
+2017-05-18 21:49:43,422 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LOCALE_18_5_] : [VARCHAR]) - [US]
+2017-05-18 21:49:43,423 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LOCALE_19_5_] : [VARCHAR]) - [en]
+2017-05-18 21:49:43,425 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([LOCALE_20_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,426 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([LOGIN21_5_] : [VARCHAR]) - [cldunn]
+2017-05-18 21:49:43,428 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([LOGIN_A22_5_] : [INTEGER]) - [null]
+2017-05-18 21:49:43,430 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([PASSWOR23_5_] : [VARCHAR]) - [asdfasdf1!]
+2017-05-18 21:49:43,432 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PASSWOR24_5_] : [DATE]) - [null]
+2017-05-18 21:49:43,433 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PASSWOR25_5_] : [TIMESTAMP]) - [null]
+2017-05-18 21:49:43,433 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PRIMARY26_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,434 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([PROVINC27_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,436 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([SECONDA28_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,437 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([STATE29_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,437 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([STATUS30_5_] : [VARCHAR]) - [ACTIVE]
+2017-05-18 21:49:43,438 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([TIME_FO31_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,439 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([TIME_ZO32_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,439 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([ZIP33_5_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,469 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.UserInfo.roles#1]
+2017-05-18 21:49:43,493 [main] DEBUG org.hibernate.engine.jdbc.spi.SqlStatementLogger logStatement 92 - 
+    select
+        roles0_.USER_INFO_ID as USER_INF1_6_0_,
+        roles0_.ROLE_ID as ROLE_ID2_6_0_,
+        role1_.ID as ID1_2_1_,
+        role1_.CREATED_BY as CREATED_2_2_1_,
+        role1_.CREATED_DATE as CREATED_3_2_1_,
+        role1_.MODIFIED_BY as MODIFIED4_2_1_,
+        role1_.MODIFIED_DATE as MODIFIED5_2_1_,
+        role1_.VERSION as VERSION6_2_1_,
+        role1_.DESCRIPTION as DESCRIPT7_2_1_,
+        role1_.NAME as NAME8_2_1_,
+        role1_.PRODUCT_ID as PRODUCT_9_2_1_ 
+    from
+        USER_INFO_ROLE roles0_ 
+    inner join
+        ROLE role1_ 
+            on roles0_.ROLE_ID=role1_.ID 
+    where
+        roles0_.USER_INFO_ID=?
+2017-05-18 21:49:43,494 [main] TRACE org.hibernate.type.descriptor.sql.BasicBinder bind 65 - binding parameter [1] as [BIGINT] - [1]
+2017-05-18 21:49:43,628 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ID1_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,629 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_2_2_1_] : [VARCHAR]) - [sys]
+2017-05-18 21:49:43,630 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_3_2_1_] : [TIMESTAMP]) - [2016-04-12 17:15:12.45]
+2017-05-18 21:49:43,630 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED4_2_1_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,631 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED5_2_1_] : [TIMESTAMP]) - [null]
+2017-05-18 21:49:43,635 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([VERSION6_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,636 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([DESCRIPT7_2_1_] : [VARCHAR]) - [Administrator]
+2017-05-18 21:49:43,637 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([NAME8_2_1_] : [VARCHAR]) - [ADMIN]
+2017-05-18 21:49:43,637 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([PRODUCT_9_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,638 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([USER_INF1_6_0_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,639 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ROLE_ID2_6_0_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,643 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ID1_2_1_] : [BIGINT]) - [2]
+2017-05-18 21:49:43,644 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_2_2_1_] : [VARCHAR]) - [sys]
+2017-05-18 21:49:43,645 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([CREATED_3_2_1_] : [TIMESTAMP]) - [2016-04-12 17:15:12.45]
+2017-05-18 21:49:43,645 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED4_2_1_] : [VARCHAR]) - [null]
+2017-05-18 21:49:43,645 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 51 - extracted value ([MODIFIED5_2_1_] : [TIMESTAMP]) - [null]
+2017-05-18 21:49:43,646 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([VERSION6_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,646 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([DESCRIPT7_2_1_] : [VARCHAR]) - [Customer]
+2017-05-18 21:49:43,646 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([NAME8_2_1_] : [VARCHAR]) - [CUSTOMER]
+2017-05-18 21:49:43,647 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([PRODUCT_9_2_1_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,647 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([USER_INF1_6_0_] : [BIGINT]) - [1]
+2017-05-18 21:49:43,654 [main] TRACE org.hibernate.type.descriptor.sql.BasicExtractor extract 61 - extracted value ([ROLE_ID2_6_0_] : [BIGINT]) - [2]
+2017-05-18 21:49:43,662 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.roleAssets#1]
+2017-05-18 21:49:43,663 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.userInfos#1]
+2017-05-18 21:49:43,664 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.roleAssets#2]
+2017-05-18 21:49:43,665 [main] TRACE org.hibernate.type.CollectionType getCollection 761 - Created collection wrapper: [com.cldbiz.boot.domain.Role.userInfos#2]

@@ -1,0 +1,8 @@
+logging:
+  level:
+    org.dbunit: INFO
+    com.cldbiz: DEBUG
+    
+spring:
+  main:
+    banner-mode: off

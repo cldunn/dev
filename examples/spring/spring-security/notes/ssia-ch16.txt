@@ -1,0 +1,134 @@
+Authorization can ba appied at the method level at any layer in the application
+
+Two types of global method security (implemneted via AOP):
+    1. Call authorization - is someone pivileged to call a method (preauthorization) or access the methods return value (postauthorization)
+       a. Preauthorization - authorization rules checked before call. Authorization can be based on authenticated user authorities and/or 
+          parameter values
+       b. Postauthorization - methods is called but authorization rules are applied to return value.  Authorization can be based on return 
+          value, authenticated user authorities and/or parameter values,  Any side effects of call are applied.
+    2. Filtering - determine what a method can recieve as parameters (prefiltering) or what it can recieve back from method (postfiltering)
+       => see module17 notes
+       
+By default, gloabl method security is disabled, to enable, apply @EnableGLobalMethodSecurity annotation on a @Configuration class
+    
+    @Configuration
+    @EnableGlobalMethodSecurity(prePostEnabled = true)
+    public class ProjectConfig {
+        @Bean
+        public UserDetailsService userDetailsService() {...}
+        
+        @Bean
+        public PasswordEncoder passwordEncoder() {...}
+  
+// Preauthorization  
+    @Service
+    public class NameService {
+    
+        @PreAuthorize("hasAuthority('write')")  // base access on authentication authorities
+        public String getName() { ... }
+
+    // Three out of the box authority functions: 
+    a. hasAnyAuthority(...)      // authentication has authorities with specific authority
+    b. hasRole(...)              // authentication has authorities with specific ROLE_
+    c. hasAnyRole(...)           // authentication has authorities with ROLE_ in list
+       
+    // can also use SpEl, #name is method parameter "name", also have access to authentication object in expression
+    @PreAuthorize("#name == authentication.principal.username") 
+    public List<String> getSecretNames(String name) {
+        return secretNames.get(name);
+    }
+
+    // can also define custom authorization service function
+    @Service
+    public class SecurityService {  // must return true/false
+       public boolean hasAccess(int parameter) {
+           return parameter == 1;
+       }
+       
+    @PreAuthorize("@securityService.hasAccess(2)")  // notice lowercase 1st letter
+    public void printStuff() {...}
+
+// Postauthorization
+    // say roles are in return value, use @PostAuthorization
+    public class Employee {
+        private String name;
+        private List<String> books;
+        private List<String> roles;
+
+    Map<Employee> employees = Map.of("emma", new Employee(...), ....);
+    
+    @PostAuthorize("returnObject.roles.contains('reader')")  // does the selected amployee have 'reader' role in its roles
+    public Employee getEmployee(String name) {
+        return employees.get(name);
+    }
+
+// Permissions
+    // can make and register custom permission handler which implements PermissionEvaluator interface
+    public interface PermissionEvaluator() {
+        boolean hasPermission(Authentication a, Object subject, Object permission)
+        boolean hasPermission(Authentication a, Serializable id, String type, Object permission)
+        
+    @Component
+    public class CustomPermissionEvaluator implements PermissionEvaluator {
+        @Overide
+        boolean hasPermission(Authentication auth, Object subject, Object permission) { 
+            Document d = (Document) subject;
+            String p = (String) permission;
+            boolean admin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(p));
+            return admin || document.getOwner().equals(authentication.getName());
+        
+        @Overide  // assume only using version one
+        boolean hasPermission(Authentication auth, Serializable id, String type, Object permission) { return false }
+        
+    @Autowired
+        private DocumentsPermissionEvaluator evaluator;
+    
+        @Override  // register CustomPermissionEvaluator to be used as hasPermission(...)
+        protected MethodSecurityExpressionHandler createExpressionHandler() {
+            var expressionHandler = new DefaultMethodSecurityExpressionHandler();
+            expressionHandler.setPermissionEvaluator(evaluator);
+            return expressionHandler;
+
+    @Service
+    public class DocumentService {
+        ...
+        @PostAuthorize("hasPermission(returnObject, 'ROLE_admin')")  // authentication (1st param) can always be assumed
+        public Document getDocument(String code) {...}
+        
+
+    // can also use use hasPermission() for @PreAuthorize
+    @Component
+    public class CustomPermissionEvaluator implements PermissionEvaluator {
+        @Autowired
+        private DocumentRepository documentRepository;
+
+        @Overide // assume only using version two
+        boolean hasPermission(Authentication auth, Object subject, Object permission)  { return false }
+        
+        @Overide  
+        boolean hasPermission(Authentication auth, Serializable id, String type, Object permission) { 
+            String code = targetId.toString();
+            String p = (String) permission;
+        
+            Document document = documentRepository.findDocument(code);
+            boolean admin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(p));
+            return admin || document.getOwner().equals(authentication.getName());
+    
+    @Service
+    public class DocumentService {
+        @PreAuthorize("hasPermission(#code, 'document', 'ROLE_admin')")
+        public Document getDocument(String code) {...}
+        
+// other options
+    @Configuration
+    @EnableGlobalMethodSecurity(jsr250Enabled = true, securedEnabled = true)
+    public class ProjectConfig { ... }
+    
+    @Serivce
+    public class MyService() {
+        
+        @RolesAllowed("ROLE_ADMIN")
+        public String getName() {...}
+
+        @Secured("ROLE_ADMIN")
+        public String getAddress() {...}

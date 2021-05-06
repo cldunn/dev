@@ -1,0 +1,113 @@
+useContext() - to access global cofniguration from ReactContext API
+
+GlobalState.tsx
+    export const GlobalContext = React.createContext();
+    
+    export const GlobalProvider = ({ children }) => {
+      return <GlobalContext.Provider value="">{children}</GlobalContext.Provider>;
+    };
+App.tsx
+    export const ConfigContext = React.createContext();
+    
+    return (
+    <ConfigContext.Provider value={configValue}>
+      <GlobalProvider>  // child of config context but parent of app content
+        ...
+      </GlobalProvider>
+    </ConfigContext.Provider>
+    );
+-----------------------------------------------------------------------
+ GlobalState.tsx
+     import useSpeakerDataManager from './useSpeakerDataManager';
+     
+     const {
+        isLoading,
+        speakerList,
+        toggleSpeakerFavorite,
+      } = useSpeakerDataManager();
+
+      const provider = {
+        isLoading: isLoading,
+        speakerList: speakerList,
+        toggleSpeakerFavorite: toggleSpeakerFavorite,
+      };
+      
+      export const GlobalProvider = ({ children }) => {
+            return <GlobalContext.Provider value={provider}>{children}</GlobalContext.Provider>;
+    };
+    
+Speakers.tsx
+    import { GlobalProvider } from './GlobalState';
+    
+    const { isLoading, speakerList, toggleSpeakerFavorite } = useContext( GlobalContext );
+--------------------------------------------------------------------------
+
+React renders component upon any changed to the passed in state
+=> when using globalContext, any change to that state forces redering of any component using globalContext, used or not
+
+// create sub-set contet of global context
+FavoriteClickCountContext.tsx
+    import { GlobalContext } from './GlobalState';
+
+    export const FavoriteClickCountContext = createContext();
+
+    export const FavoriteClickCountProvider = ({ children }) => {
+      const { incrementFavoriteClickCount } = useContext(GlobalContext);
+
+      const provider = useMemo(() => { // if used by instances of same components, memo restricts rendering to only changed components
+        return { incrementFavoriteClickCount };
+      }, []);
+
+      return (
+        <FavoriteClickCountContext.Provider value={provider}>
+          {children}
+        </FavoriteClickCountContext.Provider>
+      );
+    };
+
+App.tsx
+    const App = ({ pageName }) => {
+      return (
+        <ConfigContext.Provider value={configValue}>
+          <GlobalProvider>
+            <FavoriteClickCountProvider>  // can also appply to only sub-tree as appropriate
+              <div>{pageToShow(pageName)}</div>
+            </FavoriteClickCountProvider>
+          </GlobalProvider>
+        </ConfigContext.Provider>
+      );
+    };
+---------------------------------------------------------------------
+Error Handling
+    1. add hasErrored, error to state variables
+    2. add try/catch to REST axios calls and set state
+    
+    UseSpeakerDataManager.tsx
+        const [{ isLoading, speakerList, favoriteClickCount, hasErrored, error }, dispatch ] = useReducer(speakersReducer, {
+                 isLoading: true, speakerList: [], favoriteClickCount: 0, hasErrored: false, error: null });
+                 
+        useEffect(() => {
+            const fetchData = async function () {
+                try {
+                    let result = await axios.get('http://localhost:4000/speakers');
+                    dispatch({ type: 'setSpeakerList', data: result.data });
+                } catch (e) {
+                  dispatch({ type: 'errored', error: e });
+                }
+            };
+            fetchData();
+        ...
+        return { isLoading, speakerList, favoriteClickCount, incrementFavoriteClickCount, toggleSpeakerFavorite, hasErrored, error };
+          
+    SpeakersReducer.tsx
+        ...
+        switch (action.type) {
+            ...
+            case 'errored': {
+                return { ...state, hasErrored: true, error: action.error };
+            }
+    
+    Speakers.tsx
+        const { isLoading, speakerList, toggleSpeakerFavorite, hasErrored, error } = useContext(GlobalContext);
+        ...
+        if (hasErrored === true) return <div>Error: {error.message}</div>;

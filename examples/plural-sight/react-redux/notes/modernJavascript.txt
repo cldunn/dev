@@ -1,0 +1,150 @@
+Modules
+    Use of native JavaScript modules is dependent on the import and export statements
+    
+    Can export functions, var, let, const, classes from a module (file.js, file.tsx)
+    Easiest way to use it is to place it in front of any items you want exported out of the module
+        export const name = 'square';
+        export function draw(ctx, length, x, y, color) {...}
+    Alternative way of exporting
+        export { name, draw, reportArea, reportPerimeter }; 
+      
+    To import them into your component
+        import { name, draw, reportArea, reportPerimeter } from './modules/square.js';
+    
+    named exports (above) versus default exports  // avoid "default", just export => always need brances
+        export default randomSquare; // decalre separately in the module
+        import randomSquare from './modules/square.js';  // default, note lack of braces
+        
+let & Const
+    let - statement declares a block-scoped local variable, optionally initializing it to a value.
+        let x = 1;
+        if (x === 1) { let x = 2; console.log(x); // expected output: 2 }
+        console.log(x); // expected output: 1
+    const - block-scoped, like let variables. The value can't be reassignmed or redeclared.
+        const number = 42;
+        try { number = 99; } catch (err) { console.log(err); // expected output: TypeError: invalid ... }
+        console.log(number);  // expected output: 42
+    
+Enhanced Object Literal
+Default Parameters
+Template String
+Classes
+Arrow-Function
+exponent operator
+array.includes
+    
+Destructuring arrays, iterables and objects
+    The destructuring assignment syntax is a JavaScript expression that makes it possible to unpack values 
+    from arrays, or properties from objects, into distinct variables
+
+    var [a, b] = [10, 20]; // a= 10, b = 20
+    var [a, b, ...rest] = [10, 20, 30, 40, 50]; // a= 10, b = 20, rest =[30, 40, 50]
+    var [foo, [[bar], tee]] = [1, [[2], 3]]; // foo =1, bar = 2, tee = 3
+    
+    var { foo, bar } = { foo: "lorem", bar: "ipsum" }; // foo = "lorem", bar = "ipsum"
+    
+    const hero = {
+      name: 'Batman',
+      realName: 'Bruce Wayne'
+    };
+    const { name, realName } = hero; // name = 'Batman', realName = 'Bruce Wayne'
+
+    const myFoods = {a: 'apple', b: 'banana', c: 'carrot', d: 'donut'}
+    function printFruits({a, b}) {
+        console.log(`we should have an ${a} and ${b}`)
+    }
+    printFruits(myFoods);
+    
+Object.assign
+    const target = { a: 1, b: 2 };
+    const source = { b: 4, c: 5 };
+    const returnedTarget = Object.assign(target, source); // returnedTarget = target = { a: 1, b: 4, c: 5 }
+
+Promises
+    A Promise is a proxy for a value not necessarily known when the promise is created
+
+    A Promise is in one of these states: Pending = Initial State; Resolved = Completed Promise; Rejected = Failed Promise
+
+    Promise((resolve, reject) => {...});  // constructor to wrap functions not supporting promises;
+    
+    // Static
+    Promise.resolve(value) // returns resolved promise value
+    Promise.reject(reason) // returns rejected promise reason
+    
+    Promise.prototype.catch()
+    Promise.prototype.then()
+    Promise.prototype.finally()
+    
+    var x = 2;
+    const myPromise = new Promise((resolve, reject) => {  
+        if(x < 6) { resolve('Success.'); } else { reject('Rejection'); }
+    });
+    
+    myPromise.then((message) => { console.log(message); }).catch((message) => { console.log(message); }); // prints 'Success'
+    
+    Promise chaining...
+    // This second promise (promise2) represents the completion not just of doSomething(), 
+    // but also of the successCallback or failureCallback you passed in, 
+    // which can be other asynchronous functions returning a promise.
+    const promise2 = doSomething().then(successCallback, failureCallback);
+    
+Async/Await
+    Async - declares an asynchronous function (async function someName(){...}).
+        1. Automatically transforms a regular function into a Promise.
+        2. When called async functions resolve with whatever is returned in their body.
+        3. Async functions enable the use of await.
+
+    Await - pauses the execution of async functions. (var result = await someAsyncCall();).
+        1. When placed in front of a Promise call, await forces the rest of the code to wait until that Promise finishes and returns a result.
+        2. Await works only with Promises, it does not work with callbacks.
+        3. Await can only be used inside async functions.
+
+    // The async keyword will automatically create a new Promise and return it.
+    async function getJSONAsync(){
+        // The await keyword saves us from having to write a .then() block.
+        let json = await axios.get('https://tutorialzine.com/misc/files/example.json');
+    
+        // The result of the GET request is available in the json variable.
+        // We return it just like in a regular synchronous function.
+        return json;
+    }
+    
+    getJSONAsync().then( function(result) {
+        // Do something with result.
+    });
+    
+Rest Operator ...
+    // args is the name for the array
+    // The rest parameters must be at the end
+    // args support array methods (eg. map(), ....)
+    function sumAll(num, ...args) { 
+      let sum = 0;
+      let arr = args.map(x => x * 2);
+      for (let arg of arr) sum += arg;
+      
+      return sum;
+    }
+    
+    alert( sumAll('a', 1, 1) ); // 4
+    alert( sumAll('b', 1, 2, 3) ); // 12
+    
+Spread Operator
+    Spread looks similar to rest parameters, also using ..., but does quite the opposite.
+    When ...arr is used in the function call, it “expands” an iterable object arr into the list of arguments.
+
+    let arr = [3, 5, 1];
+    let arr2 = [8, 9, 15];
+    alert([0, ...arr, 2, ...arr2]); // 0,3,5,1,2,8,9,15 (0, then arr, then 2, then arr2)
+
+Dynamic Imports
+    The "import(modulePath)" expression loads the module and returns a promise that resolves into a module object that contains all its exports. 
+    
+    // We can use it dynamically in any place of the code
+    import(modulePath)
+        .then(obj => <module object>)
+        .catch(err => <loading error, e.g. if no such module>)
+        
+    // Alternative
+    let {hi, bye} = await import('./say.js');
+    hi();
+    bye();

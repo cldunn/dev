@@ -1,0 +1,79 @@
+Attache reusable code to components with hooks, can be used between components
+Use state/lifecycle methods in functional components
+
+useState - mock 2-way binding: <input> -> data model (state) -> label text
+    import React, { useState } from "react";
+    
+    const [inputText, setInputText] = useState("");  // inital value can be anything
+    
+    <input onChange={(e) => { setInputText(e.target.value); }}  placeholder="Enter Some Text" /> // setInputText upon each keystroke
+    <br />
+    {inputText}  // always reflects current value on screen
+    
+useRef - allows acces directly to element in DOM
+    any asset (static resource) in "/public" directory always available as if in baseUrl of website
+
+    import React, { useRef } from 'react';
+const ImageTogglerOnMouseOver = ({ primaryImg, secondaryImg }) => {
+  const imageRef = useRef(null);  
+
+  return (
+    <img
+      onMouseOver={() => { imageRef.current.src = secondaryImg; }}  // can use imageRef.current to get to attributes
+      onMouseOut={() => { imageRef.current.src = primaryImg; }}  // can use imageRef.current to get to attributes
+      src={primaryImg} alt=""
+      ref={imageRef}  // when rendering, assigns reference to img to our imageRef constant
+    />
+  );
+};
+useEffect - called when component renders, purposly causes side effects  
+    ComponentDidMount         useEffect(() = {...})  // use effect function called
+    ComponentDidUpdate        useEffect(() = {...})  // use effect function called, with some conditions 
+    ComponentDidUnmount       useEffect(() = {... return () => {...})  // use effect function's return function called
+
+    const[chkBoxVal, setChkBoxVal] = useState(false);
+    useEffect( 
+        () => {
+            ...  // call made when component rendered or updated (unless 2nd param array limits it to specific updates)
+            return () => {...} call made when component unmounts.
+        }, [chkBoxVal])  
+        
+        // [] list of dependencies for component 
+           a. if missing then fx fired on mount and updates
+           b. if empty only called once when mounted 
+           c. if contains values, then when value changed, call function
+           
+=> eg. add/remove DOM listeners
+    const [isLoading, setIsLoading] = useState(true);  // start off by flagging we are loading images
+    
+    const [inView, setInView] = useState(false);  // state reflecting if img within window, init to bw (primaryImg)
+
+    const imageRef = useRef(null);  // use useRef to determine if image within window
+    const isInView = () => {
+        const rect = imageRef.current.getBoundingClientRect();
+        return rect.top >= 0 && rect.bottom <= window.innerHeight;
+    };
+
+    const scrollHandler = () => {  // handler to set inView to T|F based upon image position
+        setInView(isInView());
+    };
+
+    useEffect(() => {
+        setIsLoading(false);  // afer mounted, turn off loaded
+        setInView(isInView());  // set inView to trigger setting img src appropriately for mounted component 
+        window.addEventListener('scroll', scrollHandler);  // add listenr
+        return () => {
+          window.removeEventListener('scroll', scrollHandler);  // remove listener upon unmount
+        };
+    }, []);  // run all listern once
+
+    // toggle img src based upon inView state
+    return <img src={
+          isLoading ? 'data:image/gif;base64,R0l...EAOw==' // 1x1gif, draw nothing while loading/mounting
+          : inView ? secondaryImg : primaryImg} alt="" ref={imageRef} />;  // draw image according to position after loaded/mounted
+          
+=> can use useEffect() to optimize performance. use useEffect dependency list to limit update redraws to specific changes  
+
+useState - track component state
+useEffect - set state when components start / finish / specific updates *.6
+useRef - control to get to DOM elements

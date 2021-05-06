@@ -1,0 +1,144 @@
+create-react-app // initialize a react application
+
+tools: node, webpack, babel, eslint, npm scripts
+=> compile JSX, Transpile JS, Linting, generate index.html, reload on save
+
+go to Node website and download (minimum version 8)
+VS code editor, use prettier
+    click on Extensions, type in "Prettier", select and click install 
+    file > preferences > settings > check formatOnSave 
+    
+start project with: 
+    /src 
+        favicon.ico
+    .github
+    .gitignore // don't verison node_modules, build, ...
+    README.md 
+    package.json (name, description, scripts, dependencies, devDependencies)
+
+view > terminal  // then run ...
+    npm install  // download into node_modules dependencies & devDependencies defined in package.json 
+    
+src/index.js  // entry point for application
+    import React from react"; 
+    import {render} from "react-dom";
+    function Greet() { return <p>Hi</p>; }
+    render(<Greet/>, document.getElementById("app"));
+
+src/index.html
+    <body><div id="app"></div></body>
+
+Use webpack to run application locally ...
+=> bundles js into single minified file that runs in the browser and includes development web server
+configured via js object => webpack.config.js in root (src sibling)
+    common to have one for dev and one for prod (eg. webpack.config.dev.js, ...)
+
+================== WEBPACK.CONFIG.JS =====================
+const webpack = require('webpack');  // use commonjs
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+process.env.NODE_ENV = "development";  // important for babel plugin
+
+module.exports = {   // commonjs export style
+    mode: 'development', 
+    target: 'web', // for browser (not nodejs)
+    devtool: 'cheap-module-source-map' // see source code for debugging
+    entry: '.src/index' // applications entry point (omit .js)
+    watch: true, // recompile when files change
+    watchOptions: { // avoid large rebuild directories
+        ignored: ['**/node_modules'] 
+    },
+    output: { 
+        path: path.resolve(__dirname, "build"), // webpack serves from memory, no actual "build" dir
+        publicPath: '/',   // define app root
+        filename: 'build.js' // name of bundled files, again no actual file generated
+    },
+    devServer {  // webpack serves application
+        stats: 'minimal',  // minimize output
+        overlay: true,     // overlay browser errors
+        historyApiFallback: true,  // makes browser route to index.js,  handled by Router
+        disableHostCheck: true, headers: {"Access-Control-Allow-Origin": "*"}, https: false  // due to chrome issue
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "src/index.html",  // where to find template
+        favicon: "src/favicon.ico",  // where to find favicon
+      }),
+    ],
+    module: {  // define what files webpack should hadle, according to rules
+      rules: [
+        {  // where, what js files and which actions to perform on them
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: ["babel-loader", "eslint-loader"],  // run eslint upon save (for --watch) (es-lint first, then babel)
+        },
+        {  // where css files are and enables import css just like js, bundle all css into one file
+          test: /(\.css)$/,
+          use: ["style-loader", "css-loader"],
+        },
+    ],
+}
+
+================== PACKAGE.JSON =====================
+
+    ======================= BABEL ========================
+    compiles modern js down to all browsers, transpiles JSX
+    prefer confiugring in package.json over .babel.rc
+        // inlcude it in dev-dependencies
+        "@babel/core": "7.3.4",
+        "babel-eslint": "10.0.1",
+        "babel-loader": "8.0.5",
+        "babel-preset-react-app": "7.0.2",
+
+        babel: {
+            "presets": [
+              "babel-preset-react-app"  // transpiles JSX and supplies usability of modern js features
+            ]
+        }
+
+    ======================== ESLINT ========================
+    prefer configuring in package.json
+      "eslintConfig": {                 // VS Code has eslint plugin => as you type indication of isues
+        "extends": [                    // enable all recommended eslint, react, import checking rules
+          "eslint:recommended",
+          "plugin:react/recommended",
+          "plugin:import/errors",
+          "plugin:import/warnings"
+        ],
+        "parser": "babel-eslint",       // since using babel, make sure eslint understands bable generated js
+        "parserOptions": {              // configure es-lint with js version, import type, indication of using JSX
+          "ecmaVersion": 2018,           
+          "sourceType": "module",       // => using import ... and not require("...")
+          "ecmaFeatures": {
+            "jsx": true
+          }
+        },
+        "env": {                        // define environment js will run in, each has unique global variables it should ignore
+          "browser": true,
+          "node": true,
+          "es6": true,
+          "jest": true
+        },
+        "rules": {                      // can override recommended defaults
+          "no-debugger": "off",         // want to use "debugger:
+          "no-console": "off",          // want to use "console.log(...)"
+          "no-unused-vars": "warn",
+          "react/prop-types": "warn"
+        },
+        "settings": {                   // required by eslint-plugin-react, tell plugin to detect react version, avoid error
+          "react": {
+            "version": "detect"
+          }
+        },
+        "root": true                    // decalres this config is root for this project, supress any config defined in user foler
+      }
+
+    
+    ====================== NPM SCRIPTS =====================
+    scripts: { // launch webpack in-memory dev server, (webpack-dev-server --hot --inline; with loaders: ["react-hot", "babel-loader"])
+        "start": "webpack-dev-server --config webpack.config.dev.js --port 3000"  
+    }
+    
+Trick: avoid hunting line down in browser
+    place "debugger;" in code where you want to break, browser auto stops there if browser devtools open
+Note: "Error: listen EADDRINUSE 127.0.0.1:3000" => running application in another terminal and address is already in use

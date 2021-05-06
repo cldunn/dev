@@ -1,0 +1,81 @@
+hooks - similar to lifecyle methods on classes, but work on function components
+    avoids "this" confusion
+    resuse state/props concepts
+    custom hooks - share logic between components
+    
+    useState - local state
+        function Example() {
+            // array destucturing, can assign anything (string, object, ...)
+            const [email, setEmail] = useState("");  // array destucturing
+            
+            // separate setter for each state object
+            return ( <input value={email} onChange={evt => setEmail(evt.target.value)} />);
+            
+    useEffect - side effects
+        function Example() {
+            const [count, setCount] = useState(0);
+            // runs after each render, like compnentDidMount()/componentDidUpdate()
+            // 2nd parameter, dependency array, invoked when any value listed changes, otherwise runs after all renders
+            // if useEffect returns function, its run when component unmounted (componentWillUnmount)
+            useEffect(() => { document.title = `Clicked ${count} times`; }, [count]);  // [] dependency array means run once => componentDidMount()
+            
+            return ( <button onClick={() => setCount(count + 1)}>Click</button> );
+        }
+        
+        use hooks to share logic between components
+        Rules:
+            can only be called from component or custom hook (not fx, js, ...)
+            hooks only declared at top level (not in if, loops, fx, ...)  
+            
+    useContext - access data in context
+    
+componet composition - creating separate components for logic and mark up
+    controller view pattern - separate logic from mark up
+    
+    contoller view - top level component with child components
+        sets props on children, interact with stores
+    
+    function ViewComponent(props) {
+        return (<div>{props.name}</div>);
+    }
+    export default ViewComponent;
+    --------------------------------------------------
+    function ControllerComponent() {
+        const [name, setName] = userState("Cliff");
+        return (<ViewComponent name={name} />);
+    }
+    export default ControllerComponent;
+    
+PropTypes - convey data expected to be received by child components
+    only run indevelopment - more for documentation
+    
+    PropTypes.array
+    PropTypes.bool
+    PropTypes.func
+    PropTypes.number
+    PropTypes.object
+    PropTypes.string
+    ProtoTypes.instanceOf(<className>)
+    ProtoTypes.oneOfTYpeobjectOf(ProtoTypes.shape(...))
+    ProtoTypes.shape({attribOne: ProtoTypes.**, ...})
+    ProtoTypes.arrayOf(ProtoTypes.shape(...))
+    ProtoTypes.objectOf(ProtoTypes.shape(...))
+
+    // define prop types ViewComponent will accept
+    // typically defined below component (eg. ViewComponent)
+    ViewComponent.propTypes = {
+        name: Proptypes.string.isRequired
+    }
+    
+    // Can also define array/object content
+    CoursesList.propTypes = {
+        courses: ProtoTypes.arrayOf(ProtoTypes.shape({
+            id: ProtoTypes.number.isRequired,
+            name: ProtoTypes.string.isRequired
+        }).isRequired
+    };
+    
+    // this declaration also sets props defaults
+    ViewComponent.defaultProps = {
+            name: "Cliff"
+    }

@@ -1,0 +1,9 @@
+{
+  "content": [
+    "rest/ui",
+    "rest/api"
+  ],
+  "withCredentials": true,
+  "changeOrigin": true,
+  "secure": false
+}

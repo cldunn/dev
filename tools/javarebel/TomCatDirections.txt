@@ -1,0 +1,5 @@
+In apache-tomcat-6.0.16/bin/catalina.bat
+
+set PROJECTS_DIR=D:\myProjects
+set JAVA_OPTS=%JAVA_OPTS% -noverify javaagent:<path>/javarebel.jar
+set JAVA_OPTS=%JAVA_OPTS% -Drebel.dirs=%PROJECTS_DIR%/afw/root/src/war/WEB-INF/classes

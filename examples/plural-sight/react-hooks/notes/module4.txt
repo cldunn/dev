@@ -1,0 +1,26 @@
+hooks can only be used in reactfunctional components
+
+useState
+    const {val, setVal] = useState(initVal);
+    onChange = { e => { setVal(e.targetValue); }}
+    
+useRef
+    const imgRef = useRef(null);
+    return ( <img src="x.png" onMouseOver={() => { imgRef.current.src = "y.png" }} ref={imgRef} /> )
+    
+useEffect  // replace componentDidMount, componentDidUpdate, componentWillUnmount
+    useEffect(() => {
+        console.log("mounting");
+        return () => { console.log("dismounting");
+    }, [isLoading]);  // executed according to dependency array
+    
+    a. no dependency array - exec upon any change
+    b. empty dependency array - exec on mounting of component
+    c. array with variables being monitored for change - exec upon change of any dependency
+    
+    equivalent
+        componentDidMount() { console.log('mounting"); }
+        componentDidUpdate(before, after) { console.log('dependency-chk"); }
+        componentWillUnmount() { console.log('dismounting"); }
+        
+    if useEffect code effects DOM, susbtiture useLayoutEffect() instead

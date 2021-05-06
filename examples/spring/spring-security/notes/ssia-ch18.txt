@@ -1,0 +1,88 @@
+HOME: keycloak.org
+download: https://www.keycloak.org/downloads
+documentation: https://www.keycloak.org/documentation
+=> unzip 
+=> go to ...\keycloak-12.0.4\bin
+=> for windows run: standalone.bat
+=> from browser go to: http://localhost:8080
+=> 1st time, on Welcome to KeyCloak page, set up admin account: cldunn/nxxxxxxxxx
+
+=> after admin account setup, from then on, from Welcome to KeyCloak page, login to Administration Console using credentials
+
+1. configuration 101
+   a. in left menu select "Realm Settings'
+   b. click "Token" tab
+   c. change "Access Token Lifespan" to soemthing like 1 day, otherwise your continously resetinng access token while developing
+      => in production it should just be a few minutes
+   d. click "Save: button at the bottom of the page
+   
+   NOTE: from General tab, at "Endpoints" field click "OpenID Endpoint Configuration" link
+        default enpoints: 
+            "authorization_endpoint": "http://localhost:8080/auth/realms/master/protocal/openid-connect/auth"
+            "token_endpoint": "http://localhost:8080/auth/realms/master/protocal/openid-connect/token"
+            "jwks_uri": "http://localhost:8080/auth/realms/master/protocal/openid-connect/certs"
+            
+            "grant_types_supported": ["authorization_code", "implicit", "refresh_token", "password", "client_credentials"]
+            
+2. register client
+   a. in left menu select "Clients"
+   b. click "Create" button in upper right above table of clients
+   c. add a new client (name: <...>, Client Protocol: openid-connect
+   d. click "Save: button at the bottom of the page
+   
+   e. in left menu select "Client Scopes"
+   f. b. click "Create" button in upper right above table of scopes
+   g. enter scope name (eg. "fitnessapp"), define Protocol Id (eg. "openid-connect")
+   h. click "Save" button at the bottom of the page
+   
+3. assign scope to client
+   a. in left menu select "Clients"
+   b. click on desired client link (or click desired client's edit button) in table of clients
+   c. select "Clients Scope" tab 
+   d. set "Assigned Default Client Scopes" (eg. "fitnessapp") and "Assigned Optionl Client Scopes" (eg. <empty>)
+   e. click "Save" button at the bottom of the page
+   
+4. create users
+   a. in left menu select "Users"
+   b. Click the "View all users" button to see current users
+   c. click "Add user" button in upper right above table of users
+   d. enter a unique user name, check "email verified" fields, make sure "Required User Action" is empty
+   h. click "Save" button at the bottom of the page
+   
+5. set user password   
+   a. in left menu select "Users"
+   b. Click the "View all users" button to see current users
+   c. click on desired user link (or click desired user's edit button) in table of users
+   d. go to "Credentials" tab
+   e. enter password, confirm password, make sure "Temporary" is off 
+      => if "Temporary" on the action auto created for user to force to change password
+   h. click "Set Password" (or "Reset Password") button at the bottom of the page
+   
+6. define roles (authorities)
+   a. in left menu select "Roless"
+   b. Click the "View all roles" button to see current roles
+   c. click "Add Role" button in upper right above table of roles
+   d. enter a unique role name, optionally enter a description (eg. fitnessuser)
+   h. click "Save" button at the bottom of the page
+
+7. assign role(s) to user(s)
+   a. in left menu select "Users"
+   b. Click the "View all users" button to see current users
+   c. click on desired user link (or click desired user's edit button) in table of users
+   d. go to "Role Mapping" tab
+   e. set "Assigned Roles" (eg. "fitnessuser")
+
+8. Populate claims of jwt token (for a specific client scope you create "mappers")
+   a. in left menu select "Client Scopes"
+   b. click on desired scope link (or click desired scope's edit button) in table of scopes
+   c. got to the "Mappers" tab
+   d. for each claim desired to be added to claims ...
+      i.   click "Create" button in upper right above table of claims
+      ii.  specify a name for the mapper, 
+           select a "Mapper Type" (eg. User Realm Role, User Property, Audience, ...), 
+           => select details to be added to the token
+           => Mapper type "Audience" sets "Include Client Audience" value as resource server's ResourceServerSecurityConfigurer.resourceId
+           specify Token Claim Name (key in token to which the value is assigned) 
+           => must match spring security expectations (user_name, authorities) 
+      iii. click "Save" button at the bottom of the page
+

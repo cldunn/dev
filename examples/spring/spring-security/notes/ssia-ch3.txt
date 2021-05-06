@@ -1,0 +1,63 @@
+1. The request is intercepted by the authentication filter
+2. Authentication  responsibility is delegated to the authentication manager.
+3. The authentication manager users the authentication provider, which implements the authentication logic
+4. The authentication provider finds the user with the user detail service and validates the password using a password encoder
+5. The result of the authentication is returned to the filter
+6. Details about the authentication entity are stored in the security context.
+
+UserDetails - describes user (name, password, authorities, isAccountNonExpired, isAccountNonLocked, isCredentialsNonExpired, isEnabled)
+    authorities - fine grained priviliges, 
+    roles - groups of privileges
+    is* => return true if user authorized, else return false
+GrantedAuthority - user authority (any string)
+UserDetailsService - only retrieves user by name
+    loadUserByName("cldunn"): UserDetails
+UserDetailsManager - extends UserDetailsService, enables user CRUD
+
+UserDetails ud = User.withUserName("cldunn")  // User.withUserName() returns a User.Builder
+    .password("12345").authorities("read").passwordEncoder(p -> encode(p)).accountExpired(false).build();
+    
+UserDetailsManager  // UserDetailsService + createUser(), updateUser(), deleteUser(), changePassword(), userExists()
+
+https://github.com/spring-projects/spring-security/blob/master/core/src/main/java/org/springframework/security/provisioning/JdbcUserDetailsManager.java
+JdbcUserDetailsManager // (class) connects to DB using JDBC -> UserDetailsManager -> UserDetailsService
+    
+    pom.xml
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+        <artifactId>mssql-jdbc</artifactId>
+    
+    application.properties
+        spring.datasource.url=
+        spring.datasource.username=
+        spring.datasource.password=
+        spring.datasource.driverClassName=
+
+        spring.datasource.initialize=true # populate using data.sql
+        spring.datasource.schema= # a schema (DDL) script resource reference
+        spring.datasource.data= # a data (DML) script resource reference
+
+            /resources/schema.sql, 
+            /resources/data.sql
+    
+    users table - id, username, password, enabled
+    authorities table - id, username, authority
+    
+    @Configuration
+    public class SecurityConfig() {
+        @Autowired
+        DataSource ds;
+
+        @Bean
+        public UserDetailsService userDetailsService() {
+            String usersByName = "select id, username, password, enabled from users where username = ?";
+            String authsForUser = "authority from authorities where username = ?";
+
+            var udm = new JdbcUserDetailsManager(ds);
+
+            // see source code (above url) and api for more customization options
+            udm.setUsersByUserNameQuery(userByName);
+            udm.setAuthoritiesByUserNameQuery(authsForUser);
+
+            return udm;
+        }
+    } 

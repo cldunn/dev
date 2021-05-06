@@ -1,0 +1,134 @@
+add and edit form data in redux store
+
+react code snippets in vs code - extension
+    eg. rcc - generates react class component template
+ 
+Note: Routing ...
+    <Route path="/course/:slug" component={ConnectecManageCoursePage} />  // more specific path must come first, :slug represetns path variable
+    <Route path="/course" component={ConnectecManageCoursePage} />   
+
+Note: Forms ...
+    <select  // Note, value is set here rather than on the option - docs: https://facebook.github.io/react/docs/forms.html
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="form-control">
+
+      <option value="">{defaultOption}</option>
+      {options.map(option => {
+        return ( <option key={option.value} value={option.value}>{option.text}</option> );
+      })}
+    </select>
+
+// hooks only work with function components
+import React, { useEffect, useState } from "react";
+
+function MyForm({ myProp, ...props }) {  / destructure props, "rest property" props has any attributes not destructured
+  // use state for local values, redux for global/shared values
+  const [course, setCourse] = useState({ ...props.course });  // if props is "rest property", why ...props.course => ...props is the reference
+
+  // replace ComponentDidMount() ...
+  useEffect(() => {
+    ...
+  }, [props.anotherProp]);  // array of items to watch for changes to trigger rendering, empty array => run just once when component mounts
+
+  // local functionality goes here ...
+  
+  // render function implied in fucntional component, only need return 
+  return ( <MyFormView /> );
+}
+
+// Can have one handleChangeevent handler for all form fields, requires naming form fields after form field attributes (eg. prevCourse.type <===> <input name="type"...>)
+function handleChange(event) {
+    const { name, value } = event.target;  // destructure event, have to cause cannot reference synthetic event in setCourse()
+    setCourse((prevCourse) => ({  // set local state via useState, prevCourse is current "course" (eg. state)
+      ...prevCourse,
+      [name]: name === "authorId" ? parseInt(value, 10) : value  // computed property syntax
+    }));
+}
+
+// Save and update form in redux and server side - done via a thunk and actionCreator(s)
+    export function saveForm(course) {
+      return function (dispatch) {
+        return courseApi
+          .saveCourse(course)
+          .then((savedCourse) => { //updateCourseSuccess and createCourseSuccess are actionCreators return action objects
+            course.id ? dispatch(updateCourseSuccess(savedCourse)) : dispatch(createCourseSuccess(savedCourse)); 
+          })
+          .catch((error) => { dispatch(apiCallError(error)); throw error; });
+      };
+    }
+
+// Process actions in reducer    
+    const initialtate =  {
+      courses: []
+    };
+    export type CourseState = Readonly<typeOf initialState>;
+
+    export default function courseReducer(state = CourseState.courses, action) {
+      switch (action.type) {
+        case types.CREATE_COURSE_SUCCESS:
+          return [...state, { ...action.course }];
+        case types.UPDATE_COURSE_SUCCESS:
+          return state.map((course) => course.id === action.course.id ? action.course : course);
+
+
+    Note: with Redux you often use spread operator, map, filter, and reduce
+
+// incorporate save into component
+    function MyForm({ myProp, ...props }) { 
+        import { saveCourse } from "../../redux/actions/courseActions";
+
+        export function ManageCoursePage({
+          ...,
+          saveCourse
+          ...props
+        }) {
+
+            function handleSave(event) {
+                event.preventDefault();
+                saveCourse(course);
+            }
+
+            return <MyFormView onSave={handleSave} />
+        }
+
+        const mapDispatchToProps = {
+          saveCourse
+        };
+
+    export default connect(mapStateToProps, mapDispatchToProps)(MyForm);
+
+// Redirect from form page after save ...
+    import {Redirect } from "react-router-com";
+
+    return {
+        <>
+            {this.state.redirectFlag && <Redirect to="/courses" />
+            ...
+
+// Alternative way to redirect
+    export function ManageCoursePage({
+      ...,
+      history,  // comes from react router automatically
+      ...props
+    }) {
+
+    function handleSave(event) {
+        event.preventDefault();
+        saveCourse(course).then(() => { history.push('/courses')});
+    }
+
+
+// pre-porpulate form initially via mapStateToProps
+    function mapStateToProps(state, ownProps) {  // ownProps - access components props (auto-poulated), can read url data injected on props by router
+        const slug = ownProps.match.params.slug;  // path variables injected into props
+        const course = slug && state.courses.length > 0  // must wait till async fetch of courses (useEffect) has time to complets before using
+            ? getCourseBySlug(state.courses, slug) // getCourseBySlug => courses.find(course => course.slug === slug) || null
+            : newCourse  
+        return {
+            course
+        };
+    }
+    
+    Note: course loaded from state, useEffect must initialize state from props so course exists

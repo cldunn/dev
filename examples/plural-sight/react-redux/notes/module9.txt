@@ -1,0 +1,153 @@
+Initial Redux Setup
+1. Create Action
+2. Create Reducer
+3. Create root reducer
+4. Configure store
+5. Instantiate store
+6. Pass props via connect
+7. Dispatch action
+
+Add feature
+1. Create action
+2, Enhance reducer
+3. Connect component
+4. Dispatch action
+
+handleChange = e => { // arrow functions inherit binding context of enclosing scope (class)
+    const course = { ...this.state.course, title: e.target.value}; // cloned state state with spread op since it is immutable
+    this.setState({ course })  // since rhs matches lhs => omit rhs (eg. "object shorthand syntax")
+}
+Note: hooks allow function to avoid "this" complexity
+
+/src
+    /redux
+        /actions
+            courseActions.tsx // holds action creators for course
+                export function createCourse(course) { return {type: "CREATE_COURSE", course: course}; }
+        /reducers
+            initialState.tsx
+                export default {
+                  courses: [],
+                  authors: [],
+                  apiCallsInProgress: 0
+                };
+
+            courseReducer.tsx  // holds reducers for course, each reducer handles "slice" of entire Redux state
+                // all reducers accept state and action as parameters, initialize state to empty array
+                export default function courseReducer() {state = initialState.courses, action) {  
+                    switch(action.type) {
+                        case "CREATE_COURSE": return [...state, { ...action.course }]; // what is returned is new state
+                        default: return state;
+                    }
+                }
+                
+                // Better alternative to initialState.tsx, define initial state as part of reducer, then combine reducers => combines state
+                const initialtate =  {
+                  courses: []
+                };
+                export type CourseState = Readonly<typeOf initialState>;
+                index.tsx
+                    const rootReducer = combineReducers({ course: CourseState});
+                    
+                // for faster lookup, courses[2] instead of courses.find(c => c.id == 2)
+                Alternative to array of objects: const courses = { 1: {id: 1, title: "course one" }, 2: {id: 2, ...}, ...}
+        
+            Note: Need root reducer that composes other reducers together
+            index.tsx
+                import { combineReducers } from 'redux';
+                import courses from "./courseReducer";  // alias courseReducer as courses since its default export
+                
+                const rootReducer = combineReducers({
+                    courses: courses
+                });
+                
+                export default rootReducer;
+        
+
+        configureStore.prod.tsx   // provide a function to configure store called at application entry point
+            import { createStore, applyMiddleware } from "redux";
+            import rootReducer from "./reducers";
+            import thunk from "redux-thunk";  // The redux-thunk middleware, which allows simple asynchronous use of dispatch.
+            
+            export default function configureStroe(initialState) {
+                return createStore(rootReducer, initialState, applyMiddleWare(thunk);
+            }
+        
+        configureStore.dev.tsx
+            import { createStore, applyMiddleware, compose } from "redux";
+            import reduxImmutableStateInvariant from "redux-immutable-state-invariant";  // validates immutablility, only dev, hurts performance
+            import rootReducer from "./reducers";
+            import thunk from "redux-thunk";  
+            
+            export default function configureStore(initialState) {
+                const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
+                
+                // composeEnhancers allows interacting with redux store using redux dev tools
+                return createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(thunk, reduxImmutableStateInvariant())));
+            }
+        
+            NOTE: reduxImmutableStateInvariant() is a function that need to be called
+            
+        configureStore.tsx
+            // Use CommonJS require below so we can dynamically import during build-time.
+            const cfgStore = (process.env.NODE_ENV === "production") ? "./configureStore.prod" : "./configureStore.dev";
+            module.exports = require(cfgStore);
+
+            // process.env.NODE_ENV defined in webpack.config.dev and webpack.config.prod
+            package.json scripts
+                "start:dev": "webpack-dev-server --config webpack.config.dev.js --port 3000",
+                "build": "webpack --config webpack.config.prod.js",
+    index.tsx
+        import {Provider as ReduxProvider } from "react-redux";
+        import configureStore from "./redux/configureStore";
+        
+        const store = configureStore();  // could pass in intial state here to override reducers initial state default parameter
+        render(<ReduxProvider store={store}><Router><App/></Router></ReduxProvider>, document.getElementById("app"));
+        
+    /components
+        MyComponent.tsx  // container component
+            import { connect } from "react-redux";
+            // import { createCourse } from "../../redux/actions/courseActions";
+            import * as courseActions from "../../redux/actions/courseActions";
+            ...
+            
+            function mapStateToProps(state, ownProps) { // determines what part of state is mapped to component; state represents gobal store
+                courses: state.courses  // be specific, request only data from store needed by component
+                // courses: state.CourseState.courses => when declaring state "segments" in reducer and: export type CourseState = Readonly<typeOf initialState>;
+            }
+            
+            
+            // if ommited could call directly (dispatch auto added to props): this.props.dispatch(courseActions.createCourse(this.state.course)
+            function mapDispatchToProps(dispatch) { // determines what actions are available in this component
+                return {
+                    actions: {
+                      createCourse: bindActionCreators(courseActions.createCourse, dispatch)  // this.props.createCourse(this.state.course)
+                      /* actions: bindActionCreators(courseActions, dispatch)  // binds all actions => this.props.actions.createCourse(this.state.course)
+                    }
+                }
+            }
+
+            // Primitive alternative => this.props.createCourse(this.state.course)
+            function mapDispatchToProps(dispatch) {
+                return {
+                    createCourse: course => dispatch(courseActions.createCourse(course))  // dispatchh notifies redux of action
+                }
+            }
+            
+            // Better alternaive, this.props.createCourse(this.state.course)
+            const mapDispatchToProps = {
+                createCourse: cousrseActions.createCourse
+            }
+            
+            export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);
+        
+        MyComponentView.tsx  // container component
+            render() {
+                {this.props.courses.map(course => (<div> key={course.title}>{course.title}</div>))} // omit return cause of concise arrow syntax
+            }
+            
+            MyComponentView.propTypes = {
+              courses: PropTypes.array.isRequired,
+              createCourse: PropTypes.func.isRequired
+            }
+};

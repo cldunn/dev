@@ -1,0 +1,29 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "target": "es5",
+    "lib": [
+      "es2017",
+      "dom", 
+      "dom.iterable", 
+      "scripthost"
+    ],
+    "sourceMap": true,
+    "declaration": false,
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "angularCompilerOptions": {
+    "preserveWhitespaces": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  },
+  "exclude": ["node_modules"]
+}

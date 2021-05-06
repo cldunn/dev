@@ -1,0 +1,83 @@
+ACTIONS
+    actions - plain object describing event, must have a "type" property
+        { type: RATE_COURSE, rating : rating } // rating can be any JSON, not funnctions or promises
+
+    actions created by convienience functions called "action creators"
+        rateCourse(rating) { return {type: RATE_COURSE, ...} }  // ussually named after action type
+
+STORE    
+    create store in apps entry point
+        let store = createStore(reducer);
+    store api
+        store.dispatch(action)
+        store.subscribe(listener)
+        store.getState()
+        replaceReducer(nextReducer) // supports hot reloading
+
+IMMUTABILITY    
+    immutablility => to change state you must return a new object  // like Number, String, Boolean, Undefined, Null
+    multiple ways to create new objects in js
+        Object.assign  // SHALLOW copies requiring cloning nested objects if nested object changed, deep cloning expensive
+            Object.assign(target, ...sources) // copyState = Object.assign({}, existingState, {role: 'admin'})
+
+            // cloning nested objects 
+            user = { name: 'cliff', address: {state: 'TX'} };
+            userCopy = {{}, user, address: {...user.address}};  // else address points to user.address and not userCopy.address
+
+        { ...myObj }   // Spread operator, SHALLOW copies requiring cloning nested objects if nested object changed, deep cloning expensive
+            const newState = { ...existingState, role: 'admin' }; // arguments on right override arguments on left
+            const arr = [...state.users] // copies an array
+
+            // cloning nested objects 
+            user = { name: 'cliff', address: {state: 'TX'} };
+            userCopy = {...user, address: {...user.address}};  // else address points to user.address and not userCopy.address
+
+        .map  // use array methods (map, filter, reduce, concat, spread);  
+              // array methods push, pop reverse mutate the array so avoid them or clone array first (eg. [...arr]
+
+    consider immer library  (react-addons-update, seamless-immutable, immutable.js, ...)
+        import produce from "immer";
+        user = { name: 'cliff', address: {state: 'TX'} };
+        userCopy =  produce{user, draftUser => { draftUser.address.state = "CA" } ); 
+            // user.address.state = "TX"
+            // userCopy.address.state = "CA"
+
+    why immutable?
+        all changes thru reducer 
+        performant, no need to check by property
+        debugging - can undo/redo, turn off specific actions, play interaction back
+
+    Need to enforce immutablility in store else it causes bugs, 
+        a. use redux-immutable-state-invariant - throws error if state chages  // only run in development, hurts performance
+        b. user immer, immutable.js, ....
+
+REDUCERS    
+    Reducers - function that takes state and action and returns new state
+        function(state, action) { 
+            switch (action.type) {
+                case "INC_COUNTER": 
+                    // state.counter++; this mutates state whcih is an error
+                    return {...state, counter: state.counter + 1 } ;  // must retrun a copy of state
+                    return state;
+                default:
+                    return state;
+
+                    1. never mutate arguments (ie. state)
+                    2. perform side effects // no api calls or routing decisions
+                    3. call other fucntions that do 1 or 2 // Date.now(), Math.random()
+
+    Can have multiple reducers (eg. one per module)
+        => ALL reducers are called on each dispatch, if action.type doesn't match then that reducer doesn't change state
+           => ALL REDUCERS NEED TO RETURN UNTOUCHED SATATE AS DEFAULT
+
+    Each reducer is passed only its "slice" of state, handles changes to different pieces of the store in isolation
+    => called reducer composition
+
+SUMMARY:
+    each action can be handled by zero, one or more reducers
+    each reducer can handle one or more actions
+    
+    actions - reflect user intent, need type; 
+    store - (api: dispatch, subscribe, ...); 
+    immutablity - return new copy; 
+    reducer - multiple reducers each handling slice of state;

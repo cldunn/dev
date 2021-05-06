@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<dbo.Product ID="1" VERSION="1" KEY_NAME="product.config" CODE="CONFIG" DESCRIPTION="Secutiry Configuration" LANDING_PAGE="config_ux/template/home/homePage" SORT_ORDER="1" ID_RANGE_START="1000001" ID_RANGE_END="2000000" STATUS="1" CREATED_DATE="2016-04-14 17:15:12.450" CREATED_BY="sys" />
+</dataset>

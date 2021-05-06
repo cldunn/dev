@@ -1,0 +1,90 @@
+Mock API
+    Mockoon
+        1. very quick, no scaffolding or coding
+        2. need to type out every response // unable to mimick DB behavior
+    JSON Server
+        serve mock api via express and json-server
+            1. requires scaffolding and coding
+                const jsonServer = require("json-server");
+                const server = jsonServer.create();
+                const path = require("path");
+                
+                const router = jsonServer.router(path.join(__dirname, "db.json"));  // db.json is json data file to be acted upon
+
+                const middlewares = jsonServer.defaults({ // Display json-server's built in homepage when json-server starts.
+                  static: "node_modules/json-server/dist",
+                });
+                server.use(middlewares); // Set default middlewares (logger, static, cors and no-cache)
+
+                server.use(jsonServer.bodyParser);  // To handle POST, PUT and PATCH you need to use a body-parser. Using JSON Server's bodyParser
+                
+                server.use(function (req, res, next) { setTimeout(next, 2000); });  // Simulate delay on all requests
+
+                server.use(router);  // Use default router
+
+                // Start server
+                const port = 3001;
+                server.listen(port, () => { console.log(`JSON Server is running on port ${port}`); });
+
+            2. can mimick updates, delete, ...  // db behaviour - expects standard rest api url conventions
+    
+    Note: The process.env global variable is injected by the Node at runtime for your application to use 
+          and it represents the state of the system environment your application is in when it starts.    
+          
+Redux middleware - runs on every reqeust, 
+    1. between dispatching and action but before it reaches the reducer: action => middleware => reducer
+    2. handles async api calls, logging, crash reporting, routing
+    
+    async libraries:
+        redux-thunk - returns functions from action creators, instead of objects  (easy to learn, hard to test, small)
+        redux-promise - use promise for async
+        redux-observable - use RxJS observables
+        redux-saga = es6, domain specific language (hard to learn, easy to test, large)
+        
+    thunk = function wraps an expression to delay its evaluation
+    redux-thunk has access to the store, can pass in store dispatch and getState when invoking the thunk
+    export function deleteAuth(authId) {  // async action, looks like sync action
+        return (dispatch, getState) => {  // thunk
+            return AuthApi.deleteAuth(authId) // returns a promise
+            .then(() => { 
+                dispatch(deletedAuth(authId)); // dispatch regular action returning action object
+            })
+            .catch(handleError);
+    };
+    
+    configureStore.tsx
+        import thunk from "redux-thunk";
+        
+        export default function configureStore(initialState) {  see module9
+            ...
+            return createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(thunk, reduxImmutableStateInvariant())));
+    
+    /* EXAMPLE */
+    courseActions.tsx
+        import * as courseApi from "../../api/courseApi"
+        
+        /* regular object returning actions go here */
+        ...
+        export function loadCoursesSuccess(courses) { // convention, suffix Success,  may also have failure too
+            return {type: types.LOAD_COURSES_SUCCESS, courses: courses }
+        }
+        
+        /* thunks */
+        export function loadCourses() {
+            return function(dispatch) {
+                return courseApi.getCourses().then(courses => { dispatch(loadCoursesSuccess(courses)); }).catch(error => { throw error })
+                // return courseApi.getCourses().then(courses => { dispatch({type: types.LOAD_COURSES_SUCCESS, courses: courses }); }).catch(...)
+            }
+        }
+        
+    courseReducer.tsx
+        export default function courseReducer(state = initialState.courses, action) {
+            switch (action.type) {
+                ...
+                case types.LOAD_COURSES_SUCCESS:
+                    return action.courses;
+      
+    CoursesPage.tsx
+        componentDidMount() {
+            this.props.actions.loadCourses().catch(error => { ... })
+        }

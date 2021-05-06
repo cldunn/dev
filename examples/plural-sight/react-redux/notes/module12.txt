@@ -1,0 +1,179 @@
+Loading indicator, feedback on save, api failures, server side-validation, client-side validation. optimistic deletes, acync/await
+
+// set delay in json-server api
+server.use(function(req,res,next) {setTimeout(next, 2000)});  // causes a need for load inidcator (Spinner) when async calls in progress
+const Spinner = () => { return <div className="loader">Loading...</div>; }; // also need css, via https://projects.lukehaas.me/css-loaders/
+
+to track when api calls begin and end add two action types BEGIN_API_CALL, END_API_CALL (optional)
+
+then corrseponding action creator: apiStatusActions.tsx
+    export function beginApiCall() { return { type: types.BEGIN_API_CALL }; }
+    export function apiCallError() { return { type: types.END_API_CALL }; }  // optional
+    export function apiCallError() { return { type: types.API_CALL_ERROR };
+}
+
+then corrseponding reducer:  apiStatusReducer.tsx
+    const initialtate =  {
+      apiCallsInProgress: 0
+    };
+    export type ApiStatusState = Readonly<typeOf initialState>;
+    
+    export default function apiStatusReducer(state = ApiStatusState.apiCallsInProgress, action )
+        switch (action.type) {
+            case types.BEGIN_API_CALL: return state + 1;
+            case types.END_API_CALL: return state - 1;  // optional
+            case types.API_CALL_ERROR: return state - 1;  // optional
+            default: state;
+        
+        // Alternativel: thunks dispatch action types ending in _SUCCESS
+        function endsInSuccess(type) return type.substring(type.length - 8) === "_SUCCESS";
+        
+        if (action.type == types.BEGIN_API_CALL) { reutrn state + 1; }
+        else if ((endsInSuccess(action.type) || action.type == types.API_CALL_ERROR) return state - 1;  // no need to dispatch separate END_API_CALL action
+        
+Remember to add new reducer to combineReducers, forgetting is implied when reducer break point not hit
+    index.tsx
+        const rootReducer - combineReducers({..., apiStatusReducer})
+
+        Note: action handled by multiple reducers (as well as obvious reducer handling multiple actions)
+        => avoid placing actions/reducers in modules, put in separate actions and reducers folders
+        
+dispatch beginApiCall() action to reducer inside async (api) action call
+    // registered in mapDispatchToProps(dispatch) via bindActionCreators(courseActions.loadCourses, dispatch)
+    // although loadCourses in actions class, not an actionCreator() : action; instead it dispatches action from async call response
+    export function loadCourses() {
+        return function (dispatch) { 
+            dispatch(beginApiCall());
+            return courseApi.getCourses()
+                .then((courses) => { dispatch(loadCourseSuccess(courses)); })  // normal action creator, named after action type, note "_success" ending
+                .catch((error) => { dispatch(apiCallError(error)); throw error; });  // if error, must decrement apiCallsInProgress
+        };
+    }
+    
+    invoke from component:
+        if (courses.length === 0) { actions.loadCourses().catch((error) => { ... }); }
+        
+        retrun (
+            ...
+            { this.prop.loading ? <Spinner /> : ... }
+        )
+        
+        function mapStateToProps(state) {
+          console.log("apiCallsInProgress: ", state.apiCallsInProgress);
+          return {
+            loading: state.apiCallsInProgress > 0,
+          };
+        }
+        
+        function mapDispatchToProps(dispatch) {
+          return {
+            actions: {
+              loadCourses: bindActionCreators(courseActions.loadCourses, dispatch)
+            },
+          };
+        }
+
+Messaging
+    App.tsx
+        import { ToastContainer } from "react-toastify";
+        import "react-toastify/dist/ReactToastify.css";
+        
+        return (
+            ...
+            <ToastContainer autoClose={3000} hideProgressBar />
+        )
+        
+     MyComponent.tsx
+        import { toast } from "react-toastify";
+        
+        function handleSave(event) {
+            event.preventDefault();
+            
+            saveCourse(course)
+              .then(() => { toast.success("Course Saved"); ... })
+              .catch((error) => { ... });
+        }
+        
+Server-side error handling:
+    // add .catch(err => {...} to api calls
+    export function MyComponent() {
+        const [errors, setErrors] = useState({});
+        
+        function handleSave(event) {
+            event.preventDefault();
+
+            saveCourse(course)
+              .then(() => { ... )
+              .catch((error) => { setErrors({onSave: error.message });
+        }
+
+        return (
+          <MyComponentView
+            ...
+            errors={errors}
+          />
+        );
+  
+    export function MyComponentView({props}) {
+        const {errors} = props;
+        return (
+            ...
+            {errors.onSave && (<div className="alert alert-danger" role="alert">{errors.onSave}</div>
+            ...
+        )
+    }
+    
+    // MyComponentActions.tsx 
+    export function saveCourse(course) {
+        return function (dispatch) { 
+            dispatch(beginApiCall());
+            return courseApi.saveCourse(course)
+                .then((course) => { ... })  
+                .catch((error) => { dispatch(apiCallError(error)); throw error; });  // if error, must decrement apiCallsInProgress
+        };
+    }
+
+// Client-side form validation (avoid server-side errors)
+    function isFormValid() {
+        const errors ={}
+        const (title, author, course, ...} = form; // get form fields
+
+        // validate each field
+        if (!title) errors.title = "Title is required";
+        ...
+
+        setErrors(errors);  // alter state, force display of errors
+
+        return Object.keys(errors).length  === 0;  // return T|F to indicate form validity
+    }
+
+    In MyComponent call to API action
+        function handleSave(event) {
+            event.preventDefault();
+            if (!formIsValid()) return;
+            ...
+            
+    In MyComponentView
+        export function MyComponentView({props}) {
+            const {errors} = props;
+            return (
+                <>
+                <TextInput error={errors.title ... />
+                
+Optimistic updates - remove data from ui then invoke server (assume success)     
+    // in action api call ...
+    export function deleteCourse(course) {
+      return function(dispatch) {  // potetially get both success and failure messags
+        dispatch(deleteCourseOptimistic(course));  // dispatch before api call, not in the response, bypass apiCallInProgress too
+        return courseApi.deleteCourse(course.id).catch(error) { toast.error("Delete Failed. " + error.message, {autoClose: false}); };
+      };
+    }
+
+
+aysnc /await - alternative to promises (still uses promises behind the scene)
+    async function handleSave(course) { // may have multiple await
+        try { // promise then equivalent
+            const cId = await saveCourse(course); // await will suspend till getting response, await must be in async function
+            return cId; // returns a promise
+        } 
+        catch (err) { ... } // promise catch equivalent

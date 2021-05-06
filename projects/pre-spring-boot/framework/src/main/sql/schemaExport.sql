@@ -1,0 +1,202 @@
+	USE [Test]
+	GO
+	
+	EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'
+	
+	if exists (SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = N'USER_INFO')    
+	begin
+		drop view USER_INFO;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = N'USER_AUTHENTICATION')    
+	begin
+		drop view USER_AUTHENTICATION;
+	end
+
+	IF EXISTS (SELECT * FROM SYS.SYNONYMS WHERE NAME = N'SN_USER_INFO') 
+	BEGIN
+		DROP SYNONYM [dbo].SN_USER_INFO
+	END
+
+	IF EXISTS (SELECT * FROM SYS.SYNONYMS WHERE NAME = N'SN_USER_AUTHENTICATION') 
+	BEGIN
+		DROP SYNONYM [dbo].SN_USER_AUTHENTICATION
+	END
+
+	create synonym [dbo].SN_USER_INFO for [TestSys].[dbo].USER_INFO
+
+	create synonym [dbo].SN_USER_AUTHENTICATION for [TestSys].[dbo].USER_AUTHENTICATION
+	
+	GO
+
+	create view [dbo].[USER_INFO] as
+	select 
+		ID,
+		CREATED_BY,
+		CREATED_DATE,
+		MODIFIED_BY,
+		MODIFIED_DATE,
+		VERSION,
+		ADDRESS_LINE1,
+		ADDRESS_LINE2,
+		CITY,
+		COUNTRY,
+		DATE_FORMAT,
+		EMAIL_ADDRESS,
+		FAX,
+		FIRST_NAME,
+		LAST_NAME,
+		LOCALE_COUNTRY,
+		LOCALE_LANGUAGE,
+		LOCALE_VARIANT,
+		PRIMARY_PHONE,
+		PROVINCE,
+		SECONDARY_PHONE,
+		STATE,
+		TIME_FORMAT,
+		TIME_ZONE,
+		ZIP,
+		USER_AUTHENTICATION_ID
+	from SN_USER_INFO
+	
+	GO
+
+	create view [dbo].[USER_AUTHENTICATION] as
+	select
+		ID,
+		CREATED_BY,
+		CREATED_DATE,
+		MODIFIED_BY,
+		MODIFIED_DATE,
+		VERSION,
+		LOGIN,
+		IS_LOCKED,
+		LAST_LOGIN_DATE,
+		LOGIN_ATTEMPTS,
+		PASSWORD,
+		PASSWORD_EXPIRE_DATE,
+		PASSWORD_MODIFIED_DATE,
+		STATUS
+	from SN_USER_AUTHENTICATION
+
+	GO
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_ROLE_RESOURCE_ROLE_ID')
+	begin
+		alter table ROLE_RESOURCE drop constraint FK_ROLE_RESOURCE_ROLE_ID;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_ROLE_RESOURCE_RESOURCE_ID')
+	begin
+		alter table ROLE_RESOURCE drop constraint FK_ROLE_RESOURCE_RESOURCE_ID;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'ROLE_RESOURCE')    
+	begin
+		drop table ROLE_RESOURCE;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'USER_INFO_ROLE')    
+	begin
+		alter table USER_INFO_ROLE drop constraint FK_USER_INFO_ROLE_ROLE_ID;
+		IF OBJECT_ID ('tr_FK_USER_INFO_ROLE_USER_INFO_ID','TR') IS NOT NULL
+		BEGIN
+		   DROP TRIGGER tr_FK_USER_INFO_ROLE_USER_INFO_ID;
+		END
+		drop table USER_INFO_ROLE;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'EMPLOYEE')    
+	begin
+		drop table EMPLOYEE;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_NAME = 'FK_PARENT_RESOURCE_ID')
+	begin
+		alter table RESOURCE drop constraint FK_PARENT_RESOURCE_ID;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'RESOURCE')    
+	begin
+		drop table RESOURCE;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'ROLE')    
+	begin
+		drop table ROLE;
+	end
+
+	if exists (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'UNIQUE_ID')    
+	begin
+		drop table UNIQUE_ID;
+	end
+
+    create table EMPLOYEE (
+        ID bigint not null,
+        CREATED_BY varchar(255) not null,
+        CREATED_DATE datetime2 not null,
+        MODIFIED_BY varchar(255),
+        MODIFIED_DATE datetime2,
+        VERSION bigint not null,
+        FIRST_NAME varchar(255),
+        HIRE_DATE date,
+        LAST_NAME varchar(255),
+        SALARY double precision,
+        CONSTRAINT [PK_EMPLOYEE] PRIMARY KEY CLUSTERED (ID)
+    );
+
+    create table RESOURCE (
+        ID bigint not null,
+        CREATED_BY varchar(255) not null,
+        CREATED_DATE datetime2 not null,
+        MODIFIED_BY varchar(255),
+        MODIFIED_DATE datetime2,
+        VERSION bigint not null,
+        NAME varchar(255) not null,
+        REF_KEY varchar(255) not null,
+        PARENT_ID bigint,
+        CONSTRAINT [PK_RESOURCE] PRIMARY KEY CLUSTERED (ID),
+		CONSTRAINT FK_PARENT_RESOURCE_ID FOREIGN KEY (PARENT_ID) REFERENCES RESOURCE (ID) 
+    );
+
+    create table ROLE (
+        ID bigint not null,
+        CREATED_BY varchar(255) not null,
+        CREATED_DATE datetime2 not null,
+        MODIFIED_BY varchar(255),
+        MODIFIED_DATE datetime2,
+        VERSION bigint not null,
+        DESCRIPTION varchar(255) not null,
+        NAME varchar(255) not null,
+        CONSTRAINT [PK_ROLE] PRIMARY KEY CLUSTERED (ID)
+    );
+
+    create table UNIQUE_ID (
+        ID_NAME varchar(255) not null,
+        NEXT_ID bigint not null,
+        CONSTRAINT [PK_UNIQUE_ID] PRIMARY KEY CLUSTERED (ID_NAME)
+    );
+
+    create table ROLE_RESOURCE (
+        RESOURCE_ID bigint not null,
+        ROLE_ID bigint not null,
+        IS_CREATABLE bit,
+        IS_DELETABLE bit,
+        IS_READABLE bit,
+        IS_UPDATABLE bit,
+        CONSTRAINT [PK_ROLE_RESOURCE] PRIMARY KEY CLUSTERED (RESOURCE_ID, ROLE_ID),
+		CONSTRAINT FK_ROLE_RESOURCE_ROLE_ID FOREIGN KEY (ROLE_ID) REFERENCES ROLE (ID),
+		CONSTRAINT FK_ROLE_RESOURCE_RESOURCE_ID FOREIGN KEY (RESOURCE_ID) REFERENCES RESOURCE (ID)
+		
+    );
+
+    create table USER_INFO_ROLE (
+        ROLE_ID bigint not null,
+        USER_INFO_ID bigint not null,
+        CONSTRAINT [PK_USER_INFO_ROLE] PRIMARY KEY CLUSTERED (ROLE_ID, USER_INFO_ID),
+		CONSTRAINT FK_USER_INFO_ROLE_ROLE_ID FOREIGN KEY (ROLE_ID) REFERENCES ROLE (ID)
+    );
+
+	GO
+
+	EXEC sp_msforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"

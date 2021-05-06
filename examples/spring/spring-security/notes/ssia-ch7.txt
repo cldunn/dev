@@ -1,0 +1,77 @@
+*** if authorization required, assume authentication required, need authorities and roles
+
+UserDetails
+    getAuthorities(): List<GrantedAuthority>
+    
+GrantedAuthority
+    getAuthority(): String
+ 
+Methods to apply authorization to url patterns in security configuration 
+    hasAuthority() - take one authority as parameter, only users having that authority can access
+    hasAnyAuthority() - takes one or more authorities, user must "have any of the given authoritiees"
+    access() - builds authorization rule based on Spring Expression Language (SpEL)
+
+import org.springframework.security.core.userdetails.User;
+
+@Configuration
+public class ProjectConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    @Bean
+    public UserDetailsService userDetailsService() {
+        var manager = new InMemoryUserDetailsManager();
+        var user1 = User.withUsername("john").password("12345").authorities("READ").build();
+        var user2 = User.withUsername("jane").password("12345").authorities("READ", "WRITE", "DELETE").build();
+        manager.createUser(user1);
+        
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        ...
+        //http.authorizeRequests().anyRequest().permitAll();
+        //http.authorizeRequests().anyRequest().hasAuthority("READ");
+        //http.authorizeRequests().anyRequest().hasAnyAuthority("WRITE", "READ");
+        //http.authorizeRequests().antMatchers("/", "/api/**").hasAuthority("WRITE");
+        
+        // can use access() for combinations of conditions on athorities, mostly one-off cases
+        http.authorizeRequests().anyRequest().access("hasAuthority('READ') and !hasAuthority('DELETE')");
+
+Roles - groups of authorities, still represented by GrantedAuthority, starts with ROLE_
+    Mask the existence of individual authorities
+    
+    hasRole() - recieves role parameter for which app authorizes request
+    hasAnyRole() - recieves role parameters for which app authorizes request
+    access() - uses Spring Expression Language (SpEL) specifying role/roles to satisfy requests
+
+@Configuration
+public class ProjectConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    @Bean
+    public UserDetailsService userDetailsService() {
+        var manager = new InMemoryUserDetailsManager();
+
+        // var user1 = User.withUsername("john").password("12345").authorities("ROLE_ADMIN").build();
+        var user1 = User.withUsername("john").password("12345").roles("ADMIN").build();
+        // var user2 = User.withUsername("jane").password("12345").authorities("ROLE_MANAGER").build();
+        var user2 = User.withUsername("jane").password("12345").roles("MANAGER").build();
+        manager.createUser(user1);
+
+    NOTE: Use ROLE_ to declare role, use role only by its name.
+        
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        ...
+        //http.authorizeRequests().anyRequest().permitAll();
+        //http.authorizeRequests().anyRequest().hasRole("ADMIN");
+        //http.authorizeRequests().anyRequest().hasAnyRole("MANAGER");
+        //http.authorizeRequests().antMatchers("/", "/api/**").hasAuthority("ADMIN");
+        
+        // can use access() any SpEL expressions, mostly one-off cases
+        http.authorizeRequests().anyRequest().access("T(java.time.LocalTime).now().isAfter(T(java.time.LocalTime).of(12.0)");
+
+http.authorizeRequests.anyRequest().denyAll();
+    Gateway for "articles"
+        http.authorizeRequests().antMatchers("/products").denyAll()
+
+    Gateway for "products"
+        http.authorizeRequests().antMatchers("/articles").denyAll()

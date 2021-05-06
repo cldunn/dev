@@ -1,0 +1,68 @@
+Hashing - Hashing algorithms are irreversible and built to provide integrity 
+    Given arbitrary input, output a specific number of bytes. 
+    One cannot determine the original data given only the output of a hashing algorithm.
+    This byte sequence will be unique to that input and will give no indication of what the input was.
+
+Encryption - process of transforming data in such a way that guarantees confidentiality. 
+    Encryption requires the use of a secret which, in cryptographic terms, we call a “key”.
+
+    symmetric - a single secret (key) is used to both encrypt and decrypt data
+    asymmetric - one public and one private secret key
+        public key - for encrytption known to every one
+        private key - for decryption and kept secret
+    
+
+public interface PasswordEncoder {
+    String encode(CharSequence rawPassword);
+    boolean matches((CharSequence rawPassword, String encodedPassword);  // such that encode(rawPassword).equals(encodedPassword)
+    
+Spring supplies implementations
+    NoOpPasswordEncoder
+    Pbkdf2PasswordEncoder
+    BCryptPasswordEncoder
+    SCryptPasswordEncoder
+    
+DelegatingPasswordEncoder - Spring bean configured with a list of encoders which applies encoder corredsponding to encodedPassword prefix
+    encodedPassword examples 
+        {noop}$2a$10$xn... 
+        {brcypt}$2a$10$xn... 
+        {scrypt)$2a$10$xn... 
+
+@Configuration
+public class ProjectConfig {
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        Map<String, PasswordEncoder> encoders = new HashMap<>();
+        encoders.put("noop", NoOpPasswordEncoder.getIstance());
+        encoders.put("bcrypt", new BcryptPasswordEncoder());
+        encoders.put("scrypt", new ScryptPasswordEncoder());
+        
+        // The idForEncode passed into the constructor determines which PasswordEncoder will be used for encoding passwords
+        return new DelegateingPasswordEncoder("bcrypt", encoders);
+        
+        // Alt. with bcrypt as default
+        // return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    ]
+    
+SSCM - part of spring
+    deals with cryptography (not part of java)
+        Key Generators - generates keys for hashing and encryption algortims
+            StringKeyGenerator
+                String generateKey()
+            BytesKeyGenerator
+                byte[] generateKey()
+                int getKeyLength()
+                
+        Encryptors - to encrypt and decrypt data
+            TextEncryptor
+                String encrypt(String text)
+                String decrypt(String text)
+            ByteEncryptor
+                byte[] encrypt(byte[] byteArray)
+                byte[] decrypt(byte[] encryptedByteArray)
+                
+            BytesEncryptor b = Encryptors.standard("password", KeyGenerators.string().generateKey()); // alt: Encryptors.stronger()
+            byte[] encrypted = b.encrypt(valueToEncrypt.getBytes());
+            byte[] decrypted = b.decrypt(encrypted);
+            
+            

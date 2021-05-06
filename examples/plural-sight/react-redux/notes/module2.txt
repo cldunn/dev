@@ -1,0 +1,10 @@
+redux - state management library  // other libs: router, weback, babel, axios, jest
+    1. centralizes all application state in a single store (one object graph), can't store same data more than once
+    2. container components are subscribed to redux store automatically, no event emitters, no dispatcher
+    3. friendly to server side rendering 
+    4. uses immutable store
+    5. hot reloading - instantly see changes in browser without losing client side state
+    6. time travel debugging, step forward/backward thru code and replay inter-actions
+    7. small foot print
+    
+    

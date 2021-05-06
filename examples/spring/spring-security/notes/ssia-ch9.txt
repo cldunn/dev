@@ -1,0 +1,68 @@
+Security Filters
+    Spring security filters added to filter chain based upon spring security configuration, duplication order => order undefined
+    CORS Filter [order: 100] --> Csrf Filter [order: 200] --> Custom Filter [order: 299] --> Basic Authentication Filter [order: 300] -->
+    
+    public classs CustomFilter implements Filter {
+        @Override
+        public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws ... {
+            HttpServletRequest _req = (HttpServletRequest) req;
+            HttpServletResponse _resp = (HttpServletResponse) resp;
+            String reqId = _req.getHeader("reqId");
+            
+            if (reqId == null || reqId.isBlank()) {_resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); return; }
+            
+            filterChain.doFIlter(req, resp);
+        
+     
+HttpSecurity
+    // must be an instance of or extend one of the Filters provided within the Security framework.
+    addFilter(javax.servlet.Filter filter) 
+    
+    // "afterFilter" paramater => one of the known Filter classes
+    addFilterBefore(javax.servlet.Filter customFilter, java.lang.Class<? extends javax.servlet.Filter> afterFilter) 
+    addFilterAfter(javax.servlet.Filter customFilter, java.lang.Class<? extends javax.servlet.Filter> afterFilter) 
+    
+    // does not overwrite existing filter, can replace positon where it would have been (eg. no httpBasic but use its class as 2nd param)
+    addFilterAt(javax.servlet.Filter customFilter, java.lang.Class<? extends javax.servlet.Filter> afterFilter) 
+    
+    @Configuration
+    public class customConfig extends WebSecurityConfigurerAdapter {
+        @Override
+        protected void configure(HttpSecurity http) throws ... {
+            http.addFilterBefore(new CustomFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new LoggingFilter(), BasicAuthenticationFilter.class)
+                .authorizeRequests().anyRequest().permitAll();
+    
+    NOTE: can supress the creation of auto-configured beans created with SPring Security
+    eg. @SpringBootApplication(exclude=(
+            UserDetailsServiceAutoCOnfiguration.class))
+            
+Spring based filters: GenericFilterBean, OncePerRequestFilter, BasicAuthenticationFilter, ...
+    
+    Can use OncePerRequestFilter for custom filters, possibly repalcing spring filters ...
+        // 1. Uses HttpServletRequest/HttpServletResponse
+        // 2. shouldNotFilter(req): boolean -> overload to bypass filtering request
+        // 3. OncePerRequestFilter does not apply to async request or error dispatch by default
+        //    NOTE: shouldNotFilterAsyncDispatch(): boolean; shouldNotFilterErrorDispatch(): boolean; -> overload to apply
+        public class CustomLoggingFilter extends OncePerRequestFilter {
+            @Override
+            protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain) {
+
+
+Order of default spring security filters ...
+1.  ChannelProcessingFilter
+2.  SecurityContextPersistenceFilter
+3.  ConcurrentSessionFilter
+4.  LogoutFilter
+5.  X509AuthenticationFilter
+6.  AstractPreAuthenticatedProcessingFilter
+7.  CasAuthenticationFilter
+8.  UsernamePasswordAuthenticationFilter
+9.  BasicAuthenticationFilter
+10. SecurityContextHolderAwareRequestFilter
+11. RememberMeAuthenticationFilter
+12. AnonymousAuthenticationFilter
+13. SessionManagementFilter
+14. ExceptionTranslationFilter
+15. FilterSecurityInterceptor
+16. SwitchUserFilter

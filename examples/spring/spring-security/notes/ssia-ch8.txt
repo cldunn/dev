@@ -1,0 +1,70 @@
+*** if authorization required, assume authentication required, need authorities and roles
+
+Matchers for url paths/endpoints
+    MVC matchers - use MVC expressions to select endpoints
+        mvcMatchers(HttpMethod method, String... patterns)
+        mvcMatchers(String... patterns)
+    Ant matchers - use Ant expressions to select endpoints
+        // NOTE: prefer mvcMatchers over .antMatchers; antMatchers like .mvcMatchers patterns but...
+        // NOTE: antMatchers distinguish between /hello and /hello/,  mvcMatchers ignore this difference
+        // http.authorizeRequests().mvcMatchers("/hello").permitAll() => .antMatchers allow /hello but reject /hello/, mvcMatchers allow both
+    regex matchers - use regular expresssions to match endpoints
+        regexMatchers(HttpMethod method, String regex);
+        regexMatchers(String regex);
+        
+    
+@Configuration
+public class ProjectConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    @Bean
+    public UserDetailsService userDetailsService() {
+        var manager = new InMemoryUserDetailsManager();
+        var user1 = User.withUsername("john").password("12345").roles("ADMIN").build();
+        var user2 = User.withUsername("jane").password("12345").roles("MANAGER").build();
+        manager.createUser(user1);
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // ignore authentication/authorization for all endpoints
+        web.ignoring().antMatchers("/**");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        ...
+
+        // http.authorizeRequests().anyRequest().permitAll();  authorize all requests, but supply CSRF and XSS guards
+        
+        // http.authorizeRequests().mvcMatchers("/hello").hasRole("ADMIN")
+        // http.authorizeRequests().mvcMatchers(HttpMethod.GET, "/a").authenticated;
+        // NOTE: http.csrf.disabled(), enables HttpMethod.POST
+        // http.authorizeRequests().mvcMatchers(HttpMethod.POST, "/a").permitAll();  
+        // NOTE: user path expression (eg. * matches only one path name, ** matches only multiple path names) to apply to path pattern
+        // http.authorizeRequests().mvcMatchers("/a/b/**").authenticated; 
+        
+        // NOTE: pattern requires pathVariable
+        // http.authorizeRequests().mvcMatchers("product/{code}").permitAll()
+        // NOTE user regex to restrict url pattern => no spaces beteen colon and regex
+        // http.authorizeRequests().mvcMatchers("product/{code:^[0-9]*$}").permitAll()
+        
+
+        NOTE: .anyRequest().authenticated() // all endpoints require authentication
+        NOTE: if authorization is permitAll(), authentication applied only if username/password supplied
+
+        NOTE: when using matchers, order from particular to general
+        NOTE: .permitAll() // applies only to authorization, not authentication
+        NOTE: .anyRequest().permitAll();  // default behavior after all particular matchers, best declare explictly (alt: denyAll())
+
+Regular expression mathers
+    https://www.regular-expressions.info.books.html
+    https;//www.regexr.com
+    
+    Consider: /email/<emaill address ending in .com>
+    http.authorizeRequests
+        .mvcMatchers("/email/{email:.*(.+@.+\\.com)}.permitAll()
+    
+    Consider: /video/{country}/{language} where country in {us, ca, uk} or language in {en|fr}
+    http.authorizeRequests
+        .regexMatchers("^.*\/(us|ca|uk)+\/(en|fr).*$").authenticated()
+    

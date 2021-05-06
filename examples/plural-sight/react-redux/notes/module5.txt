@@ -1,0 +1,43 @@
+directory layout
+    src
+        index.html
+        index.tsx
+        index.css
+        components
+            app
+                App.tsx 
+                    import {Route, Switch} from "react-router-dom";
+                    function App() {
+                        return { 
+                            <div>
+                                <Switch> // stop looking once match found, search top to bottom
+                                <Route exact path="/" component={HomePage} /></div>  // exact => only / matches
+                                <Route path="/about" component={AboutPage} /></div>
+                                <Route component={ErrorPage} />
+                             </div>
+                        );  
+                    }
+                    export default App;
+            err
+                ErrorPage.tsx
+                
+application entry point  
+    index.html
+        <div id="app"></div>
+    index.tsx
+        import { BrowserRouter as Router } from "react-router-dom";
+        import App from "./components/app/App.tsx";
+        render(<Router><App/></Router>, document.getElementById("app"));
+        
+navigation
+    import {NavLink} from "react-router-dom";
+    
+    function Header() { 
+        const activeStyle = {color:"#F15B2A"};
+        return ( 
+            <nav>
+                <NavLink exact to="/" activeStyle={activeStyle}>Home</NavLink>
+                <NavLink to="/about" activeStyle={activeStyle}>About</NavLink>
+            </nav> 
+        )
+    }

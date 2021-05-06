@@ -1,0 +1,46 @@
+redux facilitates complex data flows, inter-component communication and data resuse in many places
+redux - share state between disparate nodes in component tree
+        => avoids prop drilling
+        => alternative: react context, bundle data/functions and import into each components as needed
+           // like angular services, convention can scope it to per module
+           eg. rootComp, exprot UserContext.Provider = { data, functions }
+               compOne,  import UserContext  // provide access to UserContext.Provider
+               compTwo,  import UserContext  // provide access to UserContext.Provider
+
+redux is like a local client side database (cetralized store), stores the data
+    => any component can connect to store
+    => component cannot change store data directly, instead must execute an action, store updates are push down to connected components
+
+Principals
+    1. application state placed in a single immutable store
+    2. can only changes state by emmitting an action  {type: SUBMIT_CONTACT_FORM, message: "Hi"}
+    3. state changes are handled by "pure" functions called reducers (reducers update state)
+       => reducers recieve the current state and an action and returns a new state
+       => reducers can be nested using functional composition (like component model)
+
+summary: 
+    data flows down, actions flow up, 
+    "container" components inter-acts with redux, 
+    reducers work with immutable data store
+    
+     =>action
+    |   |
+    |   V
+    |  store <=> reducer
+    |   |
+    |   V
+     <=react
+
+    analogy: actions are sql, store is the DB and reducers are the db engine that interprets action and updates store
+ 
+ action has a "type" property and data (object)
+    { type: RATE_COURSE, rating: 5 }
+ 
+ reducer processes action
+    function appReducer(state = defaultState, action) {
+        switch(action.type) {
+            case: RATE_COURSE: return {...}  // returns new state
+        }
+    }
+ 
+ reducer updates store with new state and react-redux (lib) updates components

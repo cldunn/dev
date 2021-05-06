@@ -1,0 +1,15 @@
+logging:
+  level:
+    org.dbunit: INFO
+    org.hibernate: ERROR
+    com.cldbiz: DEBUG
+    com.cldbiz.boot: INFO
+    
+spring:
+  main:
+    banner-mode: 'off'
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+
